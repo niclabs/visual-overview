@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Preview visualizations</title>
+	<meta charset="UTF-8">
+	<meta name=description content="Demo">
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<style>
+	svg{
+		border: 1px solid black;
+	}
+	th{
+		font-size: 130%;
+	}
+	.bar{
+		fill: steelblue;
+	}
+	</style>
+</head>
+<body>
+	<div class="container" id="container">
+
+		<div class="page-header">
+			<h1>HTML for testing</h1>
+		</div>
+
+	</div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="d3.v3.min.js"></script>
+    <script src="js/d3.layout.cloud.js"></script>
+    <script src="js/wordcloud.js"></script>
+    <script src="js/bar.js"></script>
+    <script src="js/csv_utils.js"></script>
+
+    <script>
+    	detectHeader("test_datasets/random_data.csv");
+    </script>
+</body>
+</html>
