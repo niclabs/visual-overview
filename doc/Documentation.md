@@ -1,6 +1,6 @@
 # Visual-overview Documentation #
 ***
-The objective of visual-overview is, as it's name says, to give a visual overview of public datasets. The project now is in an early stage and only works with CSV (comma separated values) format.
+The objective of visual-overview is, as its name says, to give a visual overview of public datasets. The project now is in an early stage and only works with CSV (comma separated values) format.
 
 ***
 ## Detecting a table ##
@@ -18,7 +18,7 @@ So, in order to recognize a table, we most find the header and the footer. To fi
 1. If the lenght of a row is less than a given number, then that row is not the header.
 2. If half or more of a column inside a row are empty, then that row is not the header.
 
-The reason for accepting empty columns, it's because sometimes csv files comes with empty columns, and in that case, we still want to detect the table.
+The reason for accepting empty columns, is because sometimes csv files comes with empty columns, and in that case, we still want to detect the table.
 
 This heuristics will not only found the header. This heuristics are also valid for a table without headers, so it will specifically detect the beginning of a table. Given this, we can safely assume that the footer can be detected using the same heuristics, but applied at the end of the table.
 
