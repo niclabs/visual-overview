@@ -1,26 +1,33 @@
-function determineSeparator(url){
-	var separatorList = [",",";","|","\t"];
-	var separator = "";
-	var sPosition = 0;
-	var maxOccurrence = 0;
+function initialize(url){
+	var data = new Array(3);
+	var columnTypes = []
 	d3.text(url, function(data){
 		if(data == null){
 			alert("Couldn't parse dataset");
 			return;
 		}
-		var sample = data.substring(0,50000);
-		for(var i=0; i < separatorList.length; i++){
-			separator = separatorList[i];			
-			var occurrence = sample.split(separator).length;
-			if(occurrence > maxOccurrence){
-				maxOccurrence = occurrence;
-				sPosition = i;
-			}
-		}
-		separator = separatorList[sPosition];
-		detectHeader(data, separator);
+		/* data: [0: annotations, 1: rows, 2: footer] */
+		data = detectHeader(data, determineSeparator(data));
+		columnTypes = determineColumnTypes(data[1]);
+		console.log(data[1]);
 	})
 
+}
+
+function determineSeparator(data){
+	var separatorList = [",",";","|","\t"];
+	var maxOccurrence = 0;
+	var sPosition = 0;
+	var sample = data.substring(0,50000);
+	for(var i=0; i < separatorList.length; i++){
+		separator = separatorList[i];			
+		var occurrence = sample.split(separator).length;
+		if(occurrence > maxOccurrence){
+			maxOccurrence = occurrence;
+			sPosition = i;
+		}
+	}
+	return separatorList[sPosition];
 }
 
 function detectHeader(data, separator){
@@ -36,14 +43,31 @@ function detectHeader(data, separator){
 		}
 	}
 	footer = detectFooter(rows);
-	console.log(annotations);
-	console.log(rows);
-	console.log(footer);
+	return [annotations, rows, footer];
 
 }
 
+function detectFooter(rows){
+	var footer = [];
+	rows.reverse();
+	var length = rows.length;
+	for(var i=0; i<length; i++){
+		if(isHeader(rows[i])){
+			footer = rows.splice(0,i);
+			break;
+		}
+	}
+	rows.reverse();
+	footer.reverse();
+	return footer;
+}
+
+function determineColumnTypes(data){
+	return data;
+}
+
 function isHeader(row){
-	var minimum = 5;
+	var minimum = 2;
 	var maxEmpty = Math.floor(row.length/2);
 	if(containsEmpty(row, maxEmpty) || row.length < minimum)
 		return false;
@@ -64,17 +88,4 @@ function containsEmpty(row, maxEmpty){
 	return isEmpty;
 }
 
-function detectFooter(rows){
-	var footer = [];
-	rows.reverse();
-	var length = rows.length;
-	for(var i=0; i<length; i++){
-		if(isHeader(rows[i])){
-			footer = rows.splice(0,i);
-			break;
-		}
-	}
-	rows.reverse();
-	footer.reverse();
-	return footer;
-}
+
