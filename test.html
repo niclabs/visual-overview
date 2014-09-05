@@ -19,6 +19,12 @@
 		fill: steelblue;
 	}
 	</style>
+	<style type="text/css">
+	html { height: 100% }
+	body { height: 100%; margin: 0; padding: 0 }
+	#map-canvas { height: 100% }
+	</style>
+
 </head>
 <body>
 	<div class="container" id="container">
@@ -33,7 +39,25 @@
 		</div>
 
 	<button type="submit" id="go" class="btn btn-primary">Visualize!</button>
+	
+	<!-- Aquí se dibuja la tabla -->
+	<div id="loadingDiv" style="display: none;">
+		loading...	
+	</div>
+	<div id="visualization">
 
+		<table class="table table-hover">
+			<thead>
+				<tr id="headerrow">
+				</tr>
+			</thead>
+			<tbody id="tbody">
+			</tbody>
+		</table>
+	
+		<!-- div para dibujar un mapa -->
+		<div id="map-canvas" style="width: 40%; height: 40%; position: absolute;"></div>
+	</div>
 
 	</div> <!-- /container -->
 
@@ -41,16 +65,29 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="d3.min.js"></script>
+    <script src="jquery-1.11.1.js"></script>
     <script src="js/d3.layout.cloud.js"></script>
     <script src="js/wordcloud.js"></script>
     <script src="js/bar.js"></script>
+    <script src="js/map.js"></script>
     <script src="js/csv_utils.js"></script>
+    <script src="js/dataDict.js"></script>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDs1FjpnXQMH1UOmqWKuG4LL0wT_oFrLa0">
+    </script>
 
     <script>
-	d3.select("#go").on("click", function(){
+	
+	$("#go").on("click", function(){
+		
+		$("#visualization").on("start_load", function(){$("#loadingDiv").show();});
 		var url = d3.select("#url").node().value;
-		initialize(url);	
+		initialize_visualization(url);
+		//initialize_map();
+		$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
 	});
+
+
     	
     </script>
 </body>
