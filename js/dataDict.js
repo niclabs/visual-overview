@@ -1,3 +1,6 @@
+/* Data type dictionary. This is manually constructed.
+   I'm still trying to think in a better way to do this. */
+
 function determineColumnTypes(header){
 	var dataDict = {
 		"latitude":"latitude",
@@ -14,5 +17,6 @@ function determineColumnTypes(header){
 			columnTypes[i] = "default";
 		else
 			columnTypes[i] = dataDict[aux];
-	}	
+	}
+	return columnTypes;
 }
