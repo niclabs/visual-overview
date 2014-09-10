@@ -24,6 +24,7 @@ function visualize(annotations, rows, footer, columnTypes){
 	//Delete any previous information	
 	d3.select("#headerrow").selectAll("th").remove();
     	d3.select("#tbody").selectAll("tr").remove();
+	d3.select("#map-canvas").html("");
 
 	//Set the information in javascript object notation
     	data = d3.csv.formatRows(rows);

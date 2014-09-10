@@ -20,12 +20,23 @@ function initialize_map(data, columnTypes, header){
 			longitude = sample[i][longKey];
 		}
 
-		var myLatlng = new google.maps.LatLng(latitude,longitude);
+		myLatlng = new google.maps.LatLng(latitude,longitude);
+
 		var marker = new google.maps.Marker({
-    		position: myLatlng,
-    		title:"Hello World!"
-		});
-		marker.setMap(map)
+    			position: myLatlng,
+			map: map,
+    			title:"Hello World!"
+		}); 
+
+		(function(marker, i) {
+                	google.maps.event.addListener(marker, 'click', function() {
+                		infowindow = new google.maps.InfoWindow({
+                                	content: generateContent(sample[i])
+                      		});
+                        	infowindow.open(map, marker);
+                    	});
+		})(marker, i);
+		
 	}
 
 }
@@ -38,6 +49,14 @@ function getKeyName(type, columnTypes, header){
 		}
 	}
 	return key;
+}
+
+function generateContent(row){
+	var content = "";
+	for(var j in row){
+		content = content + j + ":" + row[j] + "<br>";
+	}
+	return content;
 }
 
 /* This code is from http://stackoverflow.com/questions/1140189/converting-latitude-and-longitude-to-decimal-values */
