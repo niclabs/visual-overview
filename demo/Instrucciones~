@@ -61,22 +61,21 @@ El primer dataset a mostrar, es una tabla simple de latitudes y longitudes cread
 
 Este dataset se encuentra ubicado en:
 
-	"demo/latitude_longitude.csv"
+	"demo/latitude_longitude.txt"
 
-Luego para mostrar el correcto funcionamiento, usare los únicos dataset con latitud y longitud que encontré en la pagina del gobierno de Chile. Estos datasets tiene las columnas de latitud y longitud en formato grados/minutos/segundos, e ilustran la correcta conversión a formato númerico. Estos son:
+Luego para mostrar el correcto funcionamiento, usare los únicos dataset con latitud y longitud que encontré (en formato csv) en la pagina del gobierno de Chile. Estos datasets tiene las columnas de latitud y longitud en formato grados/minutos/segundos, e ilustran la correcta conversión a formato númerico. Estos son:
 
-	"demo/precipitacionesDiariasPorEstaciones2012.csv"
-	"demo/temperaturas_diarias_2012.csv"
+	"demo/precipitacionesDiariasPorEstaciones2012.txt"
+	"demo/temperaturas_diarias_2012.txt"
 
 El siguiente fue sacado de data.gov y sus columnas de latitud/longitud vienen en formato numerico:
 
-	"demo/FieldSampleAirResults_2.csv"
+	"demo/FieldSampleAirResults_2.txt"
 
 A estas altura (en mi opinion) ya se nota un valor agregado en la visualización, pues se puede ver tendencias de lugares en los datasets. Con solo mirar el mapa se puede decir que un dataset corresponde a datos de chile, y el otro a datos de japon. Este último dataset que dejo, se ve feo, pues la previsualización de la tabla es demasiado grande. El mapa por otro lado se sigue mostrando de forma correcta:
 
 	"demo/incident_gas_transmission_gathering_2002_dec2009.txt"
 
-Notar que este archivo es un txt, pues así venia de la pagina data.gov (que especificaba que era csv). Pero dada la forma en que se parsea, la extensión del archivo en este caso no importa.
 
 Para finalizar, decir la mayoría de los datasets que tenga latitud y longitud (y cumpla con la restricción 1) debería verse correctamente en el mapa. Y como ya se dijo, cualquier otro dataset que no contenga latitud ni longitud debería mostrarse igual que siempre. Se incluyen en la carpeta "normales" datasets con visualización default que fueron exiotsamente probados.
 
