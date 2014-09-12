@@ -11,6 +11,7 @@ function initialize_map(data, columnTypes, header){
         var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 	
 	for(var i in sample){
+		// Check if latitude/longitude is in a google maps valid format
 		if(llRegex.test(sample[i][latKey]) == false){
 			latitude = ParseDMS(sample[i][latKey].replace("&deg","°"));
 			longitude = ParseDMS(sample[i][longKey].replace("&deg","°"));
@@ -20,14 +21,16 @@ function initialize_map(data, columnTypes, header){
 			longitude = sample[i][longKey];
 		}
 
+		// Create lat/lang google map variable
 		myLatlng = new google.maps.LatLng(latitude,longitude);
 
 		var marker = new google.maps.Marker({
     			position: myLatlng,
 			map: map,
     			title:"Hello World!"
-		}); 
+		});
 
+		// Add markers and infowindows
 		(function(marker, i) {
                 	google.maps.event.addListener(marker, 'click', function() {
                 		infowindow = new google.maps.InfoWindow({
@@ -35,10 +38,8 @@ function initialize_map(data, columnTypes, header){
                       		});
                         	infowindow.open(map, marker);
                     	});
-		})(marker, i);
-		
+		})(marker, i);		
 	}
-
 }
 
 function getKeyName(type, columnTypes, header){

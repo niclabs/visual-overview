@@ -15,7 +15,11 @@ function defaultVisualization(data, key){
 	var words = {};
 	for(var i=0; i<data.length; i++){
 		var row = data[i];
+		if(row[key] == undefined){	
+			continue;
+		}
 		var w = row[key].toString().toLowerCase();
+				
 		if(isStopWord(w)){
 			continue;
 		}
@@ -36,15 +40,20 @@ function defaultVisualization(data, key){
 	}
 	//Get wordcloud
 	topk = getTopK(wordArray, 50);
- 	id = key.toLowerCase().replace(" ", "")
+ 	id = key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+	console.log(id);
 
  	div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id);
+	console.log("aquí");
 	d3.select("#"+id).append("h6").html("Most common values");
+	console.log("sigo vivo");
 	wordcloud(topk, id);
+	console.log("wordcloud");
 	histogram = getRandomSample(wordArray, wordArray.length);
+	console.log("histograma");
 	d3.select("#"+id).append("h6").html("Sampled histogram");
 	bar(getTopK(histogram, histogram.length), id);
-    	d3.select("#tbody").append("tr").attr("id", "row");
+
 }
 
 function isStopWord(w){

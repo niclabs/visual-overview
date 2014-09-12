@@ -49,6 +49,7 @@ function visualize(annotations, rows, footer, columnTypes){
 		initialize_map(data, columnTypes, header);
 	}
 	else{
+	    	d3.select("#tbody").append("tr").attr("id", "row");
 		for(var j in header){
 			defaultVisualization(data, header[j]);
 		}
