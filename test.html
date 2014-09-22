@@ -40,12 +40,13 @@
 
 	<button type="submit" id="go" class="btn btn-primary">Visualize!</button>
 	
-	<!-- Aquí se dibuja la tabla -->
-	<div id="loadingDiv" style="display: none;">
-		loading...	
+	<div id="loadingDiv" style="display: none; text-align: center; padding-top: 100px;">
+		<img src="484.GIF">	
 	</div>
-	<div id="visualization">
 
+	<div id="visualization" style="position:relative">
+
+		<!-- Aquí se dibuja la tabla -->
 		<table class="table table-hover">
 			<thead>
 				<tr id="headerrow">
@@ -56,7 +57,7 @@
 		</table>
 	
 		<!-- div para dibujar un mapa -->
-		<div id="map-canvas" style="width: 40%; height: 40%; position: absolute;"></div>
+		<div id="map-canvas" style="width: 50%; height: 300px; position: absolute; margin: auto; left: 0; right: 0; background-color: transparent;"></div>
 	</div>
 
 	</div> <!-- /container -->
@@ -81,7 +82,6 @@
 	
 	$("#go").on("click", function(){
 		
-		$("#visualization").on("start_load", function(){$("#loadingDiv").show();});
 		var url = d3.select("#url").node().value;
 		initialize_visualization(url);
 		//initialize_map();

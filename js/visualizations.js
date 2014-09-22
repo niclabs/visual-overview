@@ -41,16 +41,11 @@ function defaultVisualization(data, key){
 	//Get wordcloud
 	topk = getTopK(wordArray, 50);
  	id = key.toLowerCase().replace(/[^0-9a-z-]/g,"");
-	console.log(id);
 
  	div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id);
-	console.log("aquí");
 	d3.select("#"+id).append("h6").html("Most common values");
-	console.log("sigo vivo");
 	wordcloud(topk, id);
-	console.log("wordcloud");
 	histogram = getRandomSample(wordArray, wordArray.length);
-	console.log("histograma");
 	d3.select("#"+id).append("h6").html("Sampled histogram");
 	bar(getTopK(histogram, histogram.length), id);
 

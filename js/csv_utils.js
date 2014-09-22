@@ -1,9 +1,9 @@
 function initialize_visualization(url){	
-	$("#visualization").trigger("start_load");	
+		
 	var data = new Array(3);
 	var columnTypes = []
 	//Get the csv in text format
-	d3.text(url, function(data){
+	/*d3.text(url, function(data){
 		if(data == null){
 			alert("Couldn't parse dataset");
 			return;
@@ -11,20 +11,39 @@ function initialize_visualization(url){
 		/* Separate data from annotations in an array where
 			possition 0: annotations
 			possition 1: rows
-			possition 2: footer] */
+			possition 2: footer] 
 		data = detectHeader(data, determineSeparator(data));
 		// Get the data type of each column
 		columnTypes = determineColumnTypes(data[1][0]);
 		// Visualize
 		visualize(data[0], data[1], data[2], columnTypes);
-	})
-}
+	})*/
 
-function visualize(annotations, rows, footer, columnTypes){	
 	//Delete any previous information	
 	d3.select("#headerrow").selectAll("th").remove();
     	d3.select("#tbody").selectAll("tr").remove();
 	d3.select("#map-canvas").html("");
+	$("#loadingDiv").show();
+
+	var request = d3.text(url)
+		.on("load",  function(data){
+			if(data == null){
+				alert("Couldn't parse dataset");
+				return;
+			}
+			data = detectHeader(data, determineSeparator(data));
+			columnTypes = determineColumnTypes(data[1][0]);
+			visualize(data[0], data[1], data[2], columnTypes);
+		})
+		.on("error", function(){
+			console.log("error");		
+		});
+
+	setTimeout(function(){request.get();}, 3000);
+}
+
+function visualize(annotations, rows, footer, columnTypes){	
+
 
 	//Set the information in javascript object notation
     	data = d3.csv.formatRows(rows);
@@ -49,6 +68,7 @@ function visualize(annotations, rows, footer, columnTypes){
 		initialize_map(data, columnTypes, header);
 	}
 	else{
+
 	    	d3.select("#tbody").append("tr").attr("id", "row");
 		for(var j in header){
 			defaultVisualization(data, header[j]);
