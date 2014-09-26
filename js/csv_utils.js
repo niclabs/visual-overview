@@ -1,24 +1,7 @@
 function initialize_visualization(url){	
 		
 	var data = new Array(3);
-	var columnTypes = []
-	//Get the csv in text format
-	/*d3.text(url, function(data){
-		if(data == null){
-			alert("Couldn't parse dataset");
-			return;
-		}
-		/* Separate data from annotations in an array where
-			possition 0: annotations
-			possition 1: rows
-			possition 2: footer] 
-		data = detectHeader(data, determineSeparator(data));
-		// Get the data type of each column
-		columnTypes = determineColumnTypes(data[1][0]);
-		// Visualize
-		visualize(data[0], data[1], data[2], columnTypes);
-	})*/
-
+	var columnTypes = [];
 	//Delete any previous information	
 	d3.select("#headerrow").selectAll("th").remove();
     	d3.select("#tbody").selectAll("tr").remove();
@@ -60,19 +43,9 @@ function visualize(annotations, rows, footer, columnTypes){
 		d3.select("#headerrow").append("th").html(header[j]);
 	}
 
-	//Determine dominant visualization
-	visualization = determine_dominant_visualization(columnTypes);
-
-	//Visualize
-	if(visualization == "map"){
-		initialize_map(data, columnTypes, header);
-	}
-	else{
-
-	    	d3.select("#tbody").append("tr").attr("id", "row");
-		for(var j in header){
-			defaultVisualization(data, header[j]);
-		}
+	d3.select("#tbody").append("tr").attr("id", "row");
+	for(var j in header){
+		drawVisualization(data, header, columnTypes, j);
 	}
 
 	$("#visualization").trigger("loaded");

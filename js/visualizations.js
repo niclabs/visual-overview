@@ -1,14 +1,15 @@
-function determine_dominant_visualization(columnTypes){
-	var visualization = "default";        
-	for(var i = 0; i<columnTypes.length ; i++){
-		if(columnTypes[i] == "latitude" && visualization != "calendar"){
-			visualization = "map";
-		}
-	}
-	return visualization;
-}
+
 
 /* Visualization functions from first visual-overview version. They are now considered as "default" visualization */
+
+function drawVisualization(data, header, columnTypes, position){
+	if(columnTypes[position] == "latitude"){
+		defaultVisualization(data, header[position]);
+		initialize_map(data, columnTypes, header);
+	}else if(columnTypes[position] == "default"){
+		defaultVisualization(data, header[position]);
+	}
+}
 
 function defaultVisualization(data, key){
 	var keys = {};
