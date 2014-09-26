@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
 	<title>Preview visualizations</title>
+	<script>
+      		function load() {
+        		if(window.location.hash) {
+ 				var hash = window.location.hash.substring(1);
+				initialize_visualization(hash);
+				$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
+			}
+      		}
+      		window.onload = load;
+    	</script>
 	<meta charset="UTF-8">
 	<meta name=description content="Demo">
 	<meta name=viewport content="width=device-width, initial-scale=1">
