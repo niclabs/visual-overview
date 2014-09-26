@@ -38,27 +38,29 @@
 				<input type="text" id="url" class="form-control" id="" placeholder="Give me the URL of a dataset">
 		</div>
 
-	<button type="submit" id="go" class="btn btn-primary">Visualize!</button>
+		<button type="submit" id="go" class="btn btn-primary">Visualize!</button>
 	
-	<div id="loadingDiv" style="display: none; text-align: center; padding-top: 100px;">
-		<img src="484.GIF">	
-	</div>
+		<div id="loadingDiv" style="display: none; text-align: center; padding-top: 100px;">
+			<img src="484.GIF">	
+		</div>
 
-	<div id="visualization" style="position:relative">
+		<div id="visualization" style="position:relative">
 
-		<!-- Aquí se dibuja la tabla -->
-		<table class="table table-hover">
-			<thead>
-				<tr id="headerrow">
-				</tr>
-			</thead>
-			<tbody id="tbody">
-			</tbody>
-		</table>
+			<!-- Aquí se dibuja la tabla -->
+			<div id ="table-container" style="overflow: auto; position: relative; height: 100%; width: 1170px;">
+				<table class="table table-hover" style="table-layout: fixed;">
+					<thead>
+						<tr id="headerrow">
+						</tr>
+					</thead>
+					<tbody id="tbody">
+					</tbody>
+				</table>
+			</div>
 	
-		<!-- div para dibujar un mapa -->
-		<div id="map-canvas" style="width: 50%; height: 300px; position: absolute; margin: auto; left: 0; right: 0; background-color: transparent;"></div>
-	</div>
+			<!-- div para dibujar un mapa -->
+			<div id="map-canvas" style="width: 50%; height: 300px; position: absolute; margin: auto; left: 0; right: 0; background-color: transparent;"></div>
+		</div>
 
 	</div> <!-- /container -->
 
@@ -70,10 +72,10 @@
     <script src="js/d3.layout.cloud.js"></script>
     <script src="js/wordcloud.js"></script>
     <script src="js/bar.js"></script>
-    <script src="js/map.js"></script>
+    <script src="js/visualizations.js"></script>
     <script src="js/csv_utils.js"></script>
     <script src="js/dataDict.js"></script>
-    <script src="js/visualizations.js"></script>
+
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDs1FjpnXQMH1UOmqWKuG4LL0wT_oFrLa0">
     </script>

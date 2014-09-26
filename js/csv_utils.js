@@ -40,7 +40,7 @@ function visualize(annotations, rows, footer, columnTypes){
 	header = rows[0];	
 	addPreview(data, 5);
 	for(var j in header){
-		d3.select("#headerrow").append("th").html(header[j]);
+		d3.select("#headerrow").append("th").style("width", "210px").html(header[j]);
 	}
 
 	d3.select("#tbody").append("tr").attr("id", "row");
