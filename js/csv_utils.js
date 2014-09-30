@@ -19,10 +19,11 @@ function initialize_visualization(url){
 			visualize(data[0], data[1], data[2], columnTypes);
 		})
 		.on("error", function(){
-			console.log("error");		
+			alert("Data couldn't be loaded");
+			$("#visualization").trigger("loaded");	
 		});
 
-	setTimeout(function(){request.get();}, 3000);
+	setTimeout(function(){request.get();}, 1000);
 }
 
 function visualize(annotations, rows, footer, columnTypes){	
