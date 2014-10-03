@@ -3,16 +3,16 @@
 <head>
 	<title>Preview visualizations</title>
 	<script>
-      		function load() {
-        		if(window.location.hash) {
- 				var hash = window.location.hash.substring(1);
-				initialize_visualization(hash);
-				document.getElementById('url').value=hash;
-				$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
+      	function load() {
+        	if(window.location.hash) {
+ 			var hash = window.location.hash.substring(1);
+			initialize_visualization(hash);
+			document.getElementById('url').value=hash;
+			$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
 			}
-      		}
-      		window.onload = load;
-    	</script>
+      	}
+      	window.onload = load;
+    </script>
 	<meta charset="utf-8">
 	<meta name=description content="Demo">
 	<meta name=viewport content="width=device-width, initial-scale=1">
@@ -86,6 +86,12 @@
     <script src="js/visualizations.js"></script>
     <script src="js/csv_utils.js"></script>
     <script src="js/dataDict.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript">
+
+  		// Load the Visualization API library and the piechart library.
+  		google.load('visualization', '1.0', {'packages':['annotationchart']});
+	</script>
 
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDs1FjpnXQMH1UOmqWKuG4LL0wT_oFrLa0">

@@ -5,6 +5,8 @@
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
 		initialize_map(data, columnTypes, header);
+	}else if(columnTypes[position] == "date"){
+		drawCalendar(data, columnTypes, header, position);
 	}else{
 		defaultVisualization(data, header[position]);
 	}
@@ -129,7 +131,6 @@ function initialize_map(data, columnTypes, header){
 	var id = $("<h6>").html("Map");
 	td.append(id);
 	td.append(mapCanvas);
-	console.log("canvas generado");
 
         var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 	
@@ -163,11 +164,6 @@ function initialize_map(data, columnTypes, header){
                     	});
 		})(marker, i);		
 	}
-
-
-
-	console.log("terminé");
-
 }
 
 function getKeyName(type, columnTypes, header){
@@ -211,4 +207,88 @@ function ConvertDMSToDD(degrees, minutes, seconds, direction) {
 //////////////////////////* Calendar visualization */////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-/* On progress */
+function drawCalendar(data, columnTypes, header, position){
+	var dateKey = header[position];
+	var dateFormat = getDateFormat(data, dateKey);
+	var googleData = new google.visualization.DataTable();
+	googleData.addColumn('date', 'Date');
+	googleData.addColumn('number', 'Ocurrences');
+	var dateOcurrences = [];
+
+	var calendarCanvas = $("<div>", {id: "calendar-canvas", style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
+	var td = $("<td>").attr("class", "1rowaa").attr("id", "calendar").css("width", "200px");
+	$("#row").append(td);
+	var id = $("<h6>").html("Date");
+	td.append(id);
+	td.append(calendarCanvas);
+
+	for(var i in data){
+		date = data[i][dateKey];
+		if(dateOcurrences.indexOf(date) == -1){
+			dateOcurrences.push(date);
+			ocurrences = countDateOcurrences(date, data, dateKey);
+			date = createDate(dateFormat, date);
+			if(isNaN(date)){
+				continue;
+			}
+			console.log(date);
+			console.log(ocurrences);
+			googleData.addRow([date, ocurrences]);
+		}
+	}
+
+	var chart = new google.visualization.AnnotationChart(document.getElementById('calendar-canvas'));
+	var options = {
+          displayAnnotations: true
+        };
+	chart.draw(googleData,options);
+}
+
+function createDate(dateFormat, date){
+	dateArray = date.split(/[^\d\w]+/);
+	var date = new Date(dateArray[dateFormat.indexOf("year")],dateArray[dateFormat.indexOf("month")],dateArray[dateFormat.indexOf("day")]);
+	return date;
+}
+
+function countDateOcurrences(date, data, key){
+	var i = 0;
+	for(var j in data){
+		var compDate = data[j][key];
+		if(date == compDate){
+			i++;
+		}
+	}
+	return i;
+}
+
+function getDateFormat(data, key){
+	var dateFormat = [];
+	for(var i in data){
+		var dateArray = data[i][key].split(/[^\d\w]+/);
+		if(dateArray.length > 3){
+			alert("Couldn't parse date");
+			break;
+		}
+		else if(dateFormat[0] != undefined && dateFormat[1] != undefined && dateFormat[2] != undefined){
+			break;
+		}
+		else{
+			for(var j = 0; j < 3; j++){
+				if(dateArray[j]>12 && dateArray[j]<31 && dateFormat.indexOf("day") != -1){
+					dateFormat[j] = "day";
+				}
+				else if(dateArray[j] > 31){
+					dateFormat[j] = "year";
+				}
+				else if(dateFormat[j] == undefined && dateFormat.indexOf("day")>=0 && dateFormat.indexOf("year")>=0){
+					dateFormat[j] = "month";
+				}
+			}
+		}
+	}
+	//default
+	if(dateFormat.indexOf("day") == -1 || dateFormat.indexOf("month") == -1 || dateFormat.indexOf("year") == -1){
+		dateFormat = ["day", "month", "year"];
+	}
+	return dateFormat;
+}
