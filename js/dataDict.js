@@ -20,7 +20,7 @@ function determineColumnTypes(header){
 		if(dataDict[aux] != undefined)
 			columnTypes[i] = dataDict[aux];
 		else if(aux.indexOf("fecha") != -1 || aux.indexOf("date") != -1){
-			columTypes[i]="date";
+			columnTypes[i]="date";
 		}
 		else
 			columnTypes[i] = "default";
