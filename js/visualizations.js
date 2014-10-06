@@ -4,11 +4,14 @@
 /* General method for choosing wich visualization to draw*/
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
-		initialize_map(data, columnTypes, header);
+		initialize_map(data, columnTypes, header, position);
+		drawHistogram(data, header[position]);
 	}else if(columnTypes[position] == "date"){
 		drawCalendar(data, columnTypes, header, position);
+		drawHistogram(data, header[position]);
 	}else{
-		defaultVisualization(data, header[position]);
+		drawWordCloud(data, header[position]);
+		drawHistogram(data, header[position]);
 	}
 }
 
@@ -16,7 +19,45 @@ function drawVisualization(data, header, columnTypes, position){
 //////////////////////////* Default visualization *//////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function defaultVisualization(data, key){
+function drawHistogram(data, key){
+	var keys = {};
+	var words = {};
+	for(var i=0; i<data.length; i++){
+		var row = data[i];
+		if(row[key] == undefined){	
+			continue;
+		}
+		var w = row[key].toString().toLowerCase();
+				
+		if(isStopWord(w)){
+			continue;
+		}
+		if(keys[key] ==  undefined){
+			keys[key] = 1;
+		}else{
+			keys[key]++;
+		}
+		if(words[w] ==  undefined){
+			words[w] = 1;
+		}else{
+			words[w]++;
+		}
+	}
+	wordArray = [];
+	for(var i in words){
+		wordArray.push({text: i, size: words[i]});
+	}
+	//Get wordcloud
+	topk = getTopK(wordArray, 50);
+ 	id = key.toLowerCase().replace(/[^0-9a-z-]/g,"")+"hist";
+	
+	div = d3.select("#hist").append("td").attr("class", "1rowaa").attr("id", id);
+	histogram = getRandomSample(wordArray, wordArray.length);
+	d3.select("#"+id).append("h6").html("Sampled histogram");
+	bar(getTopK(histogram, histogram.length), id);
+}
+
+function drawWordCloud(data, key){
 	var keys = {};
 	var words = {};
 	for(var i=0; i<data.length; i++){
@@ -48,13 +89,9 @@ function defaultVisualization(data, key){
 	topk = getTopK(wordArray, 50);
  	id = key.toLowerCase().replace(/[^0-9a-z-]/g,"");
 
- 	div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id).style("width","200px");
+ 	div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id);
 	d3.select("#"+id).append("h6").html("Most common values");
 	wordcloud(topk, id);
-	histogram = getRandomSample(wordArray, wordArray.length);
-	d3.select("#"+id).append("h6").html("Sampled histogram");
-	bar(getTopK(histogram, histogram.length), id);
-
 }
 
 function isStopWord(w){
@@ -115,7 +152,7 @@ function addPreview(data, n){
 ////////////////////////////* Map visualization *////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function initialize_map(data, columnTypes, header){
+function initialize_map(data, columnTypes, header, position){
 	var sample = getRandomSample(data, 200);
 	var latKey = getKeyName("latitude", columnTypes, header);
 	var longKey = getKeyName("longitude", columnTypes, header);
@@ -125,11 +162,13 @@ function initialize_map(data, columnTypes, header){
           zoom: 0
         };
 
-	var mapCanvas = $("<div>", {id: "map-canvas", style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
-	var td = $("<td>").attr("class", "1rowaa").attr("id", "map").css("width", "200px");
+	var id = header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+
+	var mapCanvas = $("<div>", {id: "map-canvas", style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
 	$("#row").append(td);
-	var id = $("<h6>").html("Map");
-	td.append(id);
+	var text = $("<h6>").html("Map");
+	td.append(text);
 	td.append(mapCanvas);
 
         var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
@@ -215,14 +254,19 @@ function drawCalendar(data, columnTypes, header, position){
 	googleData.addColumn('number', 'Ocurrences');
 	var dateOcurrences = [];
 
-	var calendarCanvas = $("<div>", {id: "calendar-canvas", style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
-	var td = $("<td>").attr("class", "1rowaa").attr("id", "calendar").css("width", "200px");
+	var id = header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+
+	var calendarCanvas = $("<div>", {id: "calendar-canvas", style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px");
 	$("#row").append(td);
-	var id = $("<h6>").html("Date");
-	td.append(id);
+	var text = $("<h6>").html("Date occurrences");
+	td.append(text);
 	td.append(calendarCanvas);
 
 	for(var i in data){
+		if(data[i][dateKey] == undefined){
+			continue;
+		}
 		date = data[i][dateKey];
 		if(dateOcurrences.indexOf(date) == -1){
 			dateOcurrences.push(date);
@@ -241,7 +285,7 @@ function drawCalendar(data, columnTypes, header, position){
 	var options = {
           displayAnnotations: true
         };
-	chart.draw(googleData,options);
+	chart.draw(googleData, options);
 }
 
 function createDate(dateFormat, date){
@@ -264,6 +308,9 @@ function countDateOcurrences(date, data, key){
 function getDateFormat(data, key){
 	var dateFormat = [];
 	for(var i in data){
+		if(data[i][key] == undefined){
+			continue;
+		}
 		var dateArray = data[i][key].split(/[^\d\w]+/);
 		if(dateArray.length > 3){
 			alert("Couldn't parse date");
