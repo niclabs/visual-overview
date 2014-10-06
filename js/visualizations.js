@@ -255,8 +255,9 @@ function drawCalendar(data, columnTypes, header, position){
 	var dateOcurrences = [];
 
 	var id = header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var canvasid = "calendar-canvas"+id;
 
-	var calendarCanvas = $("<div>", {id: "calendar-canvas", style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
+	var calendarCanvas = $("<div>", {id: canvasid, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px");
 	$("#row").append(td);
 	var text = $("<h6>").html("Date occurrences");
@@ -281,7 +282,7 @@ function drawCalendar(data, columnTypes, header, position){
 		}
 	}
 
-	var chart = new google.visualization.AnnotationChart(document.getElementById('calendar-canvas'));
+	var chart = new google.visualization.AnnotationChart(document.getElementById(canvasid));
 	var options = {
           displayAnnotations: true
         };
