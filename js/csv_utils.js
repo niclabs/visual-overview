@@ -41,8 +41,7 @@ function visualize(annotations, rows, footer, columnTypes){
 	header = rows[0];	
 	addPreview(data, 5);
 	for(var j in header){
-		console.log(columnTypes[j]);
-		if(columnTypes[j] == "latitude" || columnTypes[j] == "date"){
+		if(columnTypes[j] == "date"){
 			d3.select("#headerrow").append("th").style("width", "310px").html(header[j]);
 		}
 		else{

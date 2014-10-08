@@ -4,19 +4,54 @@
 /* General method for choosing wich visualization to draw*/
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
-		initialize_map(data, columnTypes, header, position);
+		drawMap(data, columnTypes, header, position);
 		drawHistogram(data, header[position]);
 	}else if(columnTypes[position] == "date"){
 		drawCalendar(data, columnTypes, header, position);
 		drawHistogram(data, header[position]);
-	}else{
-		drawWordCloud(data, header[position]);
+	}else if(columnTypes[position] == "default"){
+		var defaultType = getDefaultType(data, header[position]);
+		if(defaultType == "numerical"){
+			drawBoxPlot(data, header[position]);		
+		}
+		else{
+			drawWordCloud(data, header[position]);
+		}
+		drawHistogram(data, header[position]);
+	}
+	else{
 		drawHistogram(data, header[position]);
 	}
 }
 
+function getDefaultType(data, key){
+	var type = "default";
+	var sample = getRandomSample(data, 200);
+	// This for is only used for checking if there are undefined values
+	for(var i = 0; i<data.length; i++){
+		var row = sample[i];
+		if(row[key] == undefined){
+			continue;		
+		}
+		var reg = /^\d+$/;
+
+		if(isNumber(row[key])){
+			type = "numerical";
+			break;		
+		}
+		else{
+			break;		
+		}		
+	}	
+	return type;
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 /////////////////////////////////////////////////////////////////////////////
-//////////////////////////* Default visualization *//////////////////////////
+////////////////////////////////* Histogram *////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
 function drawHistogram(data, key){
@@ -56,6 +91,10 @@ function drawHistogram(data, key){
 	d3.select("#"+id).append("h6").html("Sampled histogram");
 	bar(getTopK(histogram, histogram.length), id);
 }
+
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////* Word Cloud *///////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 function drawWordCloud(data, key){
 	var keys = {};
@@ -149,23 +188,134 @@ function addPreview(data, n){
 }
 
 /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////* Box Plot *////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+function drawBoxPlot(data, key){
+	// Create an array only with the numbers
+	var numArray = [];
+	for(var i = 0; i < data.length; i++){
+		var row = data[i];
+		if(row == undefined){
+			continue;		
+		}
+		numArray.push(row[key]);
+	}
+	// Sort the array;
+	numArray.sort(function(a, b) {
+  		return a - b;
+	});
+	// Get data
+	var minimum = parseFloat(numArray[0]);
+	var maximum = parseFloat(numArray[numArray.length-1]);
+	var median = parseFloat(getMedian(numArray));
+	var lowerQ = parseFloat(getMedian(numArray.slice(0, Math.floor(numArray.length/2))));
+	var upperQ = parseFloat(getMedian(numArray.slice(Math.floor(numArray.length/2), numArray.length)));
+
+	console.log(median);
+
+
+	// Create container div
+	var id = key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var canvasId = "boxPlot" + id;
+
+	var boxPlotCanvas = $("<div>", {id: canvasId, style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
+	$("#row").append(td);
+	var text = $("<h6>").html("Data");
+	td.append(text);
+	td.append(boxPlotCanvas);
+	
+	// Draw box plot
+	$(function () {
+	    $('#'+canvasId).highcharts({
+
+		chart: {
+		    type: 'boxplot'
+		},
+ 		
+		title: {
+            		text: ''
+        	},
+
+		legend: {
+		    enabled: false
+		},
+
+		xAxis: {
+		    categories: [''],
+		    title: {
+		        text: ''
+		    }
+		},
+
+		yAxis: {
+		    title: {
+		        text: 'Data Values'
+		    },
+		    plotLines: [{
+		        value: median,
+		        color: 'red',
+		        width: 1,
+		        label: {
+		            align: 'center',
+		            style: {
+		                color: 'gray'
+		            }
+		        }
+		    }]
+		},
+
+		series: [{
+		    name: 'Observations',
+		    data: [
+		        [minimum, lowerQ, median, upperQ, maximum],
+		    ],
+		    tooltip: {
+		        headerFormat: '<em>Experiment No {point.key}</em><br/>'
+		    }
+		}]
+
+	    });
+	});
+}
+
+function getMedian(numArray){
+	var length = numArray.length;
+	var median;
+	if(isEven(length)){
+		var position = length/2;
+		median = numArray[position];
+	}else{
+		var position = Math.floor(length/2);
+		median = (parseFloat(numArray[position])+parseFloat(numArray[position+1]))/2;
+	}
+	return median;
+}
+
+function isEven(n) {
+  return n == parseFloat(n)? !(n%2) : void 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
 ////////////////////////////* Map visualization *////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function initialize_map(data, columnTypes, header, position){
+function drawMap(data, columnTypes, header, position){
 	var sample = getRandomSample(data, 200);
 	var latKey = getKeyName("latitude", columnTypes, header);
 	var longKey = getKeyName("longitude", columnTypes, header);
 	var llRegex = /^(\-?\d+(\.\d+)?)/g;
 	var mapOptions = {
           center: new google.maps.LatLng(0, 0),
-          zoom: 0
+          zoom: 1
         };
 
 	var id = header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
 
-	var mapCanvas = $("<div>", {id: "map-canvas", style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
-	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
+	var mapCanvas = $("<div>", {id: "map-canvas", style: "width: 400px; height: 200px; position: absolute; background-color: transparent;"});
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id).attr("colspan", 2).css("width", "200px").css("height","200px");
 	$("#row").append(td);
 	var text = $("<h6>").html("Map");
 	td.append(text);
@@ -276,8 +426,6 @@ function drawCalendar(data, columnTypes, header, position){
 			if(isNaN(date)){
 				continue;
 			}
-			console.log(date);
-			console.log(ocurrences);
 			googleData.addRow([date, ocurrences]);
 		}
 	}
