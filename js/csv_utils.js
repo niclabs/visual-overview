@@ -22,8 +22,8 @@ function initialize_visualization(url){
 			alert("Data couldn't be loaded");
 			$("#visualization").trigger("loaded");	
 		});
-
-	setTimeout(function(){request.get();}, 1000);
+	
+	setTimeout(function(){request.get();}, 500);
 }
 
 function visualize(annotations, rows, footer, columnTypes){	

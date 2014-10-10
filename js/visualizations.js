@@ -84,7 +84,7 @@ function drawHistogram(data, key){
 	}
 	//Get wordcloud
 	topk = getTopK(wordArray, 50);
- 	id = key.toLowerCase().replace(/[^0-9a-z-]/g,"")+"hist";
+ 	id = "h"+key.toLowerCase().replace(/[^0-9a-z-]/g,"");
 	
 	div = d3.select("#hist").append("td").attr("class", "1rowaa").attr("id", id);
 	histogram = getRandomSample(wordArray, wordArray.length);
@@ -126,7 +126,7 @@ function drawWordCloud(data, key){
 	}
 	//Get wordcloud
 	topk = getTopK(wordArray, 50);
- 	id = key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+ 	id = "wc"+key.toLowerCase().replace(/[^0-9a-z-]/g,"");
 
  	div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id);
 	d3.select("#"+id).append("h6").html("Most common values");
@@ -199,6 +199,9 @@ function drawBoxPlot(data, key){
 		if(row == undefined){
 			continue;		
 		}
+		if(isNaN(parseFloat(row[key]))){
+			continue;		
+		}
 		numArray.push(row[key]);
 	}
 	// Sort the array;
@@ -212,12 +215,9 @@ function drawBoxPlot(data, key){
 	var lowerQ = parseFloat(getMedian(numArray.slice(0, Math.floor(numArray.length/2))));
 	var upperQ = parseFloat(getMedian(numArray.slice(Math.floor(numArray.length/2), numArray.length)));
 
-	console.log(median);
-
-
 	// Create container div
-	var id = key.toLowerCase().replace(/[^0-9a-z-]/g,"");
-	var canvasId = "boxPlot" + id;
+	var id = "bp"+key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var canvasId = "canvas" + id;
 
 	var boxPlotCanvas = $("<div>", {id: canvasId, style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
@@ -312,16 +312,17 @@ function drawMap(data, columnTypes, header, position){
           zoom: 1
         };
 
-	var id = header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var id = "map"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var canvasId = "canvas"+id;
 
-	var mapCanvas = $("<div>", {id: "map-canvas", style: "width: 400px; height: 200px; position: absolute; background-color: transparent;"});
+	var mapCanvas = $("<div>", {id: canvasId, style: "width: 400px; height: 200px; position: absolute; background-color: transparent;"});
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id).attr("colspan", 2).css("width", "200px").css("height","200px");
 	$("#row").append(td);
 	var text = $("<h6>").html("Map");
 	td.append(text);
 	td.append(mapCanvas);
 
-        var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        var map = new google.maps.Map(document.getElementById(canvasId), mapOptions);
 	
 	for(var i in sample){
 		// Check if latitude/longitude is in a google maps valid format
@@ -404,8 +405,8 @@ function drawCalendar(data, columnTypes, header, position){
 	googleData.addColumn('number', 'Ocurrences');
 	var dateOcurrences = [];
 
-	var id = header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
-	var canvasid = "calendar-canvas"+id;
+	var id = "cal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var canvasid = "canvas"+id;
 
 	var calendarCanvas = $("<div>", {id: canvasid, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px");
