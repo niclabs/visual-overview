@@ -195,18 +195,19 @@ function drawBoxPlot(data, key){
 	var numArray = [];
 	for(var i = 0; i < data.length; i++){
 		var row = data[i];
-		if(row == undefined){
+		if(row[key] == undefined){
 			continue;		
 		}
 		if(isNaN(parseFloat(row[key].replace("$","").replace("%","")))){
 			continue;		
 		}
-		numArray.push(row[key]);
+		numArray.push(parseFloat(row[key].replace("$","").replace("%","")));
 	}
 	// Sort the array;
 	numArray.sort(function(a, b) {
-  		return a - b;
-	});
+  			return a - b;
+		});
+	console.log(numArray);
 	// Get data
 	var minimum = parseFloat(numArray[0]);
 	var maximum = parseFloat(numArray[numArray.length-1]);
