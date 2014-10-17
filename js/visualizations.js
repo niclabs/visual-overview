@@ -33,9 +33,8 @@ function getDefaultType(data, key){
 		if(row[key] == undefined){
 			continue;		
 		}
-		var reg = /^\d+$/;
 
-		if(isNumber(row[key])){
+		if(isNumber(row[key].replace("%","").replace("$",""))){
 			type = "numerical";
 			break;		
 		}
@@ -199,7 +198,7 @@ function drawBoxPlot(data, key){
 		if(row == undefined){
 			continue;		
 		}
-		if(isNaN(parseFloat(row[key]))){
+		if(isNaN(parseFloat(row[key].replace("$","").replace("%","")))){
 			continue;		
 		}
 		numArray.push(row[key]);
@@ -326,6 +325,9 @@ function drawMap(data, columnTypes, header, position){
 	
 	for(var i in sample){
 		// Check if latitude/longitude is in a google maps valid format
+		if(sample[i][latKey] == undefined){
+			continue;
+		}
 		if(llRegex.test(sample[i][latKey]) == false){
 			latitude = ParseDMS(sample[i][latKey].replace("&deg","°"));
 			longitude = ParseDMS(sample[i][longKey].replace("&deg","°"));
@@ -415,6 +417,11 @@ function drawCalendar(data, columnTypes, header, position){
 	td.append(text);
 	td.append(calendarCanvas);
 
+	if(dateFormat == "Error"){
+		alert("Date couldn't be parsed");
+		return;
+	}
+
 	for(var i in data){
 		if(data[i][dateKey] == undefined){
 			continue;
@@ -462,16 +469,16 @@ function getDateFormat(data, key){
 			continue;
 		}
 		var dateArray = data[i][key].split(/[^\d\w]+/);
-		if(dateArray.length > 3){
-			alert("Couldn't parse date");
-			break;
+		if(dateArray.length < 3){
+			dateFormat = "Error";
+			return dateFormat;
 		}
 		else if(dateFormat[0] != undefined && dateFormat[1] != undefined && dateFormat[2] != undefined){
 			break;
 		}
 		else{
 			for(var j = 0; j < 3; j++){
-				if(dateArray[j]>12 && dateArray[j]<31 && dateFormat.indexOf("day") != -1){
+				if(dateArray[j]>12 && dateArray[j]<31 && dateFormat.indexOf("day") == -1){
 					dateFormat[j] = "day";
 				}
 				else if(dateArray[j] > 31){
@@ -483,6 +490,7 @@ function getDateFormat(data, key){
 			}
 		}
 	}
+	console.log(dateFormat);
 	//default
 	if(dateFormat.indexOf("day") == -1 || dateFormat.indexOf("month") == -1 || dateFormat.indexOf("year") == -1){
 		dateFormat = ["day", "month", "year"];

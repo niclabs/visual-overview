@@ -10,10 +10,10 @@
 Bugs encontrados
 
 - Los ids no pueden comenzar con números								--> ARREGLADO
-- Los porcentajes deberían considerarse numeros, el wordcloud con porcentajes no se ve bien		--> PENDIENTE
+- Los porcentajes deberían considerarse numeros, el wordcloud con porcentajes no se ve bien		--> ARREGLADO
 - Al identificar columnas numericas y hacer el boxplot, a veces obtenía NaN, y fallaba la visualización	--> ARREGLADO
 - Algunos boxplot tienen sus datos mal calculados, hay que ver porque					--> PENDIENTE
-- Error cuando algun espacio de una columna de fecha viene vació					--> PENDIENTE
+- Error cuando algun espacio de una columna de fecha viene vació					--> ARREGLADO
 
 Notas
 
