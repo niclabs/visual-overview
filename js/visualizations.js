@@ -207,7 +207,6 @@ function drawBoxPlot(data, key){
 	numArray.sort(function(a, b) {
   			return a - b;
 		});
-	console.log(numArray);
 	// Get data
 	var minimum = parseFloat(numArray[0]);
 	var maximum = parseFloat(numArray[numArray.length-1]);
@@ -491,7 +490,6 @@ function getDateFormat(data, key){
 			}
 		}
 	}
-	console.log(dateFormat);
 	//default
 	if(dateFormat.indexOf("day") == -1 || dateFormat.indexOf("month") == -1 || dateFormat.indexOf("year") == -1){
 		dateFormat = ["day", "month", "year"];

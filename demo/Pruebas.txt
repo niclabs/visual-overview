@@ -1,0 +1,66 @@
+datos.gob.cl
+
+Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3022
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2140
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/1972
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/245
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2731
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/1512
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/1976
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/1981
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3182
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3187
+
+No Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2134 --> Tiene columnas con nombre repetido
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2137 --> Las fechas no se muestran correctamente
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2544 --> Por alguna razón, no recibe datos
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3574 --> Idem con el de arriba
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3728 --> No se detecta header
+
+Nota: En algunos dataset, salen numeros con punto, o con coma. Dado que en chile se usa la coma para separar decimales, no es trivial arreglar el problema que esto genera (que se muestre wordcloud en vez de boxplot)
+
+data.gov
+
+Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://health.data.ny.gov/api/views/es3k-2aus/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://health.data.ny.gov/api/views/jxy9-yhdk/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://health.data.ny.gov/api/views/utrt-zdsi/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://data.cdc.gov/api/views/crtu-weni/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://health.data.ny.gov/api/views/dk4z-k3xb/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://data.cdc.gov/api/views/nkri-ptxd/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://health.data.ny.gov/api/views/dmn7-mpa8/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://health.data.ny.gov/api/views/bbkg-kmnd/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://data.medicare.gov/api/views/kwd6-ji9j/rows.csv?accessType=DOWNLOAD
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://data.medicare.gov/api/views/dc76-gh7x/rows.csv?accessType=DOWNLOAD
+
+No Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://www.data.gov/app/uploads/2014/06/NIH-Core-Facilities.csv --> muchas columnas vacias
+
+data.gov.uk
+
+Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://site.landregistry.gov.uk/__data/assets/file/0004/101848/Number-and-types-of-transactions-for-value-by-all-account-customers.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/310001/20140508_Interim_Disposals_Database_HouseofCommons_Report.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://chargepoints.dft.gov.uk/api/retrieve/registry/format/csv --> Eso sí, esta casi vacio
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/61944/ndpb-high-earners.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://d2a9983j4okwzn.cloudfront.net/downloads/ofcom-uk-broadband-speed-data-2013.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://d2a9983j4okwzn.cloudfront.net/downloads/ofcom-uk-mobile-coverage-data-2012.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.eastsussex.gov.uk/educationandlearning/schools/schoolsearch/schools.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.ic.nhs.uk/catalogue/PUB10016/2010-11_NDA_Rept1.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://maps.bristol.gov.uk/instantatlas/bopen/energy_generation_wc_140114.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.leedsdatamill.org/storage/f/2014-06-20T14%3A24%3A52.174Z/accidents2013.csv
+
+No Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.uk/sites/default/files/Surface_Water_Status_Objectives_2012.csv --> Tiene columnas con nombre repetido
+- http://www.leedsdatamill.org/storage/f/2014-03-05T15%3A15%3A07.685Z/council-energy-consumtion.csv --> Algunas columnas de numeros no se consideran como numeros, porque tienen muchos espacios en blanco
+
+
+
+Problemas frecuentes:
+- Tamaño: Archivos de más de 1 MB se demoran demasiado
+- Links rotos: Hay muchos links en las paginas que no sirven
+- Nombres de columnas muy largas hacen que se superpongan algunos textos
+- Multiples tablas: Hay muchos csv que tienen más de una tabla adentro, una despues de la otra
+- Muchos archivos son .zip
