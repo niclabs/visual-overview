@@ -56,6 +56,44 @@ No Funciona
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.uk/sites/default/files/Surface_Water_Status_Objectives_2012.csv --> Tiene columnas con nombre repetido
 - http://www.leedsdatamill.org/storage/f/2014-03-05T15%3A15%3A07.685Z/council-energy-consumtion.csv --> Algunas columnas de numeros no se consideran como numeros, porque tienen muchos espacios en blanco
 
+data.gov.au
+
+Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/dataset/70f76a9e-d450-4567-9760-290dea54229c/resource/7eb30338-768e-436c-9dde-dc7a1066c9c9/download/medicareofficelocationsasat3october2014.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/dataset/70c2b2fe-2a32-450e-98dc-453fe4a02aae/resource/1a257286-a274-4288-ad11-f40e104827ad/download/centrelinkofficelocationsasat3october2014.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T182805/tmpvl0oKMCty-by-commodity-FY2012.csv -> Pesa 10.6 MB, pero por alguna razón cargo rápido
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T180721/tmp07rzt1CFA-locations.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T200137/tmpIbHWo3waterconq3.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T193905/tmpZX7qMwLocation-of-European-Wasps-Nests.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T183210/tmpzTarsIContactSpreadsheetAll.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T181910/tmp_OYwMM044220.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T181635/tmp6iSsn4fitness-centres.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T203235/tmpFW_bu_afl.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/dataset/553b3049-2b8b-46a2-95e6-640d7986a8c1/resource/9fee88ed-dc75-4b6c-88b7-c8a6f04f86e7/download/toiletmapexport141001090000.csv
+
+No Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/dataset/cbd17c8c-7ab5-45d7-9c00-bf4b2678b248/resource/2d38b209-a499-4b54-bac3-3d89bbc1a789/download/pldirectorysep14.csv --> No había considerado que latitude y longitude podían ser substrings
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T181629/tmpAFY_mhskating.csv --> Muchas columnas en blanco
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T180848/tmpli5RW4water-use.csv --> 2 columnas con el mismo nombre
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T185139/tmpcSTzXmtracking.csv --> Columnas en blanco
+
+data.gc.ca
+
+Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.hc-sc.gc.ca/data-donnees/por-rop/cdn-attitudes-healthcare_attitudes-canadiens-system-soins.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.hc-sc.gc.ca/data-donnees/por-rop/health-warning-messages-survey_sondage-mises-en-garde-illustrees-2012.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.hc-sc.gc.ca/data-donnees/hecs-dgsesc/vims_fukushima_aerosol.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.fin.gc.ca/pub/psf-psp/txt_eng/2005/Sep_2005.txt
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.infrastructure.gc.ca/alt-format/isf-fsi/english-settings-configuration-anglaise/ontario-eng.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.pc.gc.ca/pc-open-data/NHSC_LHNC_TB.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.thesaurus.gc.ca/EAEAD1E6-7DD2-4997-BE7F-40BFB1CBE8A2/CST20131105.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://lacbac01.blob.core.windows.net/facesofwwii/Faces-of-War_Visages-de-guerre_20131129.csv --> Eso sí, la fecha esta en un formato que no se reconoce.
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.tc.gc.ca/extracts/VMRTCDaily.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.international.gc.ca/por/hom/ods_person_footnotes.csv --> Eso si, los nombres de las columnas se superponen
+
+No Funciona
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.hc-sc.gc.ca/data-donnees/hpfb-dgpsa/vegetables-legumes/nutrient_value_vegetables_and_vegetable_products_2008_valeur_nutritive_legumes_et_produits_base_de_legumes-eng.csv --> Columnas con el mismo nombre
+
 
 
 Problemas frecuentes:
