@@ -1,26 +1,25 @@
-
 /* This document contains every visualization and visualizations helpers functions */
 
 /* General method for choosing wich visualization to draw*/
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
 		drawMap(data, columnTypes, header, position);
-		drawHistogram(data, header[position]);
+		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "date"){
 		drawCalendar(data, columnTypes, header, position);
-		drawHistogram(data, header[position]);
+		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "default"){
 		var defaultType = getDefaultType(data, header[position]);
 		if(defaultType == "numerical"){
-			drawBoxPlot(data, header[position]);		
+			drawBoxPlot(data, header[position], position);		
 		}
 		else{
-			drawWordCloud(data, header[position]);
+			drawWordCloud(data, header[position], position);
 		}
-		drawHistogram(data, header[position]);
+		drawHistogram(data, header[position], position);
 	}
 	else{
-		drawHistogram(data, header[position]);
+		drawHistogram(data, header[position], position);
 	}
 }
 
@@ -53,7 +52,7 @@ function isNumber(n) {
 ////////////////////////////////* Histogram *////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function drawHistogram(data, key){
+function drawHistogram(data, key, position){
 	var keys = {};
 	var words = {};
 	for(var i=0; i<data.length; i++){
@@ -83,7 +82,7 @@ function drawHistogram(data, key){
 	}
 	//Get wordcloud
 	topk = getTopK(wordArray, 50);
- 	id = "h"+key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+ 	id = "h"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 	
 	div = d3.select("#hist").append("td").attr("class", "1rowaa").attr("id", id);
 	histogram = getRandomSample(wordArray, wordArray.length);
@@ -95,7 +94,7 @@ function drawHistogram(data, key){
 ////////////////////////////////* Word Cloud *///////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function drawWordCloud(data, key){
+function drawWordCloud(data, key, position){
 	var keys = {};
 	var words = {};
 	for(var i=0; i<data.length; i++){
@@ -125,7 +124,7 @@ function drawWordCloud(data, key){
 	}
 	//Get wordcloud
 	topk = getTopK(wordArray, 50);
- 	id = "wc"+key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+ 	id = "wc"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 
  	div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id);
 	d3.select("#"+id).append("h6").html("Most common values");
@@ -190,7 +189,7 @@ function addPreview(data, n){
 /////////////////////////////////* Box Plot *////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function drawBoxPlot(data, key){
+function drawBoxPlot(data, key, position){
 	// Create an array only with the numbers
 	var numArray = [];
 	for(var i = 0; i < data.length; i++){
@@ -215,7 +214,7 @@ function drawBoxPlot(data, key){
 	var upperQ = parseFloat(getMedian(numArray.slice(Math.floor(numArray.length/2), numArray.length)));
 
 	// Create container div
-	var id = "bp"+key.toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var id = "bp"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 	var canvasId = "canvas" + id;
 
 	var boxPlotCanvas = $("<div>", {id: canvasId, style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
@@ -311,7 +310,7 @@ function drawMap(data, columnTypes, header, position){
           zoom: 1
         };
 
-	var id = "map"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var id = "map"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 	var canvasId = "canvas"+id;
 
 	var mapCanvas = $("<div>", {id: canvasId, style: "width: 400px; height: 200px; position: absolute; background-color: transparent;"});
@@ -407,7 +406,7 @@ function drawCalendar(data, columnTypes, header, position){
 	googleData.addColumn('number', 'Ocurrences');
 	var dateOcurrences = [];
 
-	var id = "cal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"");
+	var id = "cal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 	var canvasid = "canvas"+id;
 
 	var calendarCanvas = $("<div>", {id: canvasid, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});

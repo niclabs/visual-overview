@@ -1,8 +1,7 @@
-function initialize_visualization(url){	
-		
+function initialize_visualization(url){		
 	var data = new Array(3);
 	var columnTypes = [];
-	//Delete any previous information	
+	//Delete any previous information
 	d3.select("#headerrow").selectAll("th").remove();
     	d3.select("#tbody").selectAll("tr").remove();
 	d3.select("#map-canvas").html("");
@@ -21,15 +20,13 @@ function initialize_visualization(url){
 		})
 		.on("error", function(){
 			alert("Data couldn't be loaded");
-			$("#visualization").trigger("loaded");	
+			$("#visualization").trigger("loaded");
 		});
-	
+
 	setTimeout(function(){request.get();}, 500);
 }
 
-function visualize(annotations, rows, footer, columnTypes){	
-
-
+function visualize(annotations, rows, footer, columnTypes){
 	//Set the information in javascript object notation
     	data = d3.csv.formatRows(rows);
 	data = d3.csv.parse(data);
@@ -38,9 +35,13 @@ function visualize(annotations, rows, footer, columnTypes){
     	if(data.length == 0){
     	 	return;
     	}
+
 	//Add a preview
-	header = rows[0];	
+	header = rows[0];
+	header = header.filter(function(n){ return n != "" });
+
 	addPreview(data, 5);
+
 	for(var j in header){
 		if(columnTypes[j] == "date"){
 			d3.select("#headerrow").append("th").style("width", "310px").html(header[j]);
@@ -52,6 +53,8 @@ function visualize(annotations, rows, footer, columnTypes){
 
 	d3.select("#tbody").append("tr").attr("id", "row");
 	d3.select("#tbody").append("tr").attr("id", "hist");
+
+	//Add visualization
 	for(var j in header){
 		drawVisualization(data, header, columnTypes, j);
 	}
@@ -65,7 +68,7 @@ function determineSeparator(data){
 	var sPosition = 0;
 	var sample = data.substring(0,50000);
 	for(var i=0; i < separatorList.length; i++){
-		separator = separatorList[i];			
+		separator = separatorList[i];
 		var occurrence = sample.split(separator).length;
 		if(occurrence > maxOccurrence){
 			maxOccurrence = occurrence;
@@ -128,5 +131,3 @@ function containsEmpty(row, maxEmpty){
 	}
 	return isEmpty;
 }
-
-
