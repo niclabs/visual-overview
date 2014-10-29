@@ -7,19 +7,27 @@ function initialize_visualization(url){
 	d3.select("#map-canvas").html("");
 	$("#loadingDiv").show();
 
-	var request = d3.text(url)
-	/*var request = d3.text("http://viz.niclabs.cl/visualoverviews/proxy.php?url="+url)*/
+	/*var request = d3.text(url)*/
+	var request = d3.text("http://viz.niclabs.cl/visualoverviews/proxy.php?url="+url)
 		.on("load",  function(data){
 			if(data == null){
 				alert("Couldn't parse dataset");
 				return;
 			}
-			data = detectHeader(data, determineSeparator(data));
-			columnTypes = determineColumnTypes(data[1][0]);
-			visualize(data[0], data[1], data[2], columnTypes);
+			try{
+				data = detectHeader(data, determineSeparator(data));
+				columnTypes = determineColumnTypes(data[1][0]);
+				visualize(data[0], data[1], data[2], columnTypes);
+			}catch(err){
+				alert("An error ocurred while processing the dataset");
+				$("#visualization").trigger("loaded");			
+			}
 		})
 		.on("error", function(){
 			alert("Data couldn't be loaded");
+			d3.select("#headerrow").selectAll("th").remove();
+    			d3.select("#tbody").selectAll("tr").remove();
+			d3.select("#map-canvas").html("");
 			$("#visualization").trigger("loaded");
 		});
 
