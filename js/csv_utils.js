@@ -20,14 +20,14 @@ function initialize_visualization(url){
 				visualize(data[0], data[1], data[2], columnTypes);
 			}catch(err){
 				alert("An error ocurred while processing the dataset");
+				d3.select("#headerrow").selectAll("th").remove();
+    				d3.select("#tbody").selectAll("tr").remove();
+				d3.select("#map-canvas").html("");
 				$("#visualization").trigger("loaded");			
 			}
 		})
 		.on("error", function(){
 			alert("Data couldn't be loaded");
-			d3.select("#headerrow").selectAll("th").remove();
-    			d3.select("#tbody").selectAll("tr").remove();
-			d3.select("#map-canvas").html("");
 			$("#visualization").trigger("loaded");
 		});
 
