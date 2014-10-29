@@ -74,6 +74,7 @@
 		</div>
 
 	</div> <!-- /container -->
+	<br>
 	<div class="container" id="footer"> Add our bookmark: <a href = "javascript: (function(){
 
 	var theDiv = document.createElement( 'div' );
@@ -147,7 +148,6 @@
 		var url = d3.select("#url").node().value;
 		window.location.hash=url;
 		initialize_visualization(url);
-		//initialize_map();
 		$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
 	});
 
