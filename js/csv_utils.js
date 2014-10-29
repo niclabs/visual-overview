@@ -7,8 +7,8 @@ function initialize_visualization(url){
 	d3.select("#map-canvas").html("");
 	$("#loadingDiv").show();
 
-	/*var request = d3.text(url)*/
-	var request = d3.text("http://viz.niclabs.cl/visualoverviews/proxy.php?url="+url)
+	var request = d3.text(url)
+	/*var request = d3.text("http://viz.niclabs.cl/visualoverviews/proxy.php?url="+url)*/
 		.on("load",  function(data){
 			if(data == null){
 				alert("Couldn't parse dataset");

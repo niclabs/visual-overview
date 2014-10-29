@@ -74,6 +74,50 @@
 		</div>
 
 	</div> <!-- /container -->
+	<div class="container" id="footer"> Add our bookmark: <a href = "javascript: (function(){
+
+	var theDiv = document.createElement( 'div' );
+	theDiv.appendChild( document.createTextNode('Visualize it!') );
+	theDiv.style.position='fixed';
+	theDiv.style.left='0';
+	theDiv.style.top='0';
+	theDiv.style.borderBottomRightRadius='10px';
+	theDiv.style.backgroundColor='white';
+	theDiv.style.border='solid 2px #357EBD';
+	theDiv.style.height='150px';
+	theDiv.style.width='250px';
+	theDiv.style.fontWeight='400';
+	theDiv.style.fontSize='22px';
+	theDiv.style.paddingTop='20px';
+	theDiv.style.paddingLeft='10px';
+	theDiv.style.textAlign='left';
+	theDiv.style.lineHeight= '1.42857';
+	theDiv.style.boxSizing='border-box';
+	document.body.appendChild( theDiv );
+
+	var input = document.createElement('input');
+	input.id = 'input90751';
+	input.setAttribute('type','text');
+	input.setAttribute('placeholder','Drag and drop a csv URL here!');
+	input.style.width='90%';
+	input.style.color='black';
+	input.style.fontSize='12px';
+	theDiv.appendChild(input);
+
+	var button = document.createElement('button');
+	button.style.borderRadius='4px';
+	button.style.border='solid 2px #357EBD';
+	button.style.backgroundColor='#428BCA';
+	button.style.color='#FFF';
+	button.style.fontSize='12px';
+	button.appendChild( document.createTextNode('Visualize!') );
+	button.onclick = (function(){
+		var url = 'http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#'+document.getElementById('input90751').value;
+		window.open(url);		
+	});
+	theDiv.appendChild(button);
+
+})();">Visualize it!</div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

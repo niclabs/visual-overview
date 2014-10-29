@@ -12,8 +12,10 @@ Funciona
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3182
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3187
 
+Arreglado
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2134
+
 No Funciona
-- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2134 --> Tiene columnas con nombre repetido
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2137 --> Las fechas no se muestran correctamente
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/2544 --> Por alguna razón, no recibe datos
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://datos.gob.cl/recursos/download/3574 --> Idem con el de arriba
@@ -35,7 +37,7 @@ Funciona
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://data.medicare.gov/api/views/kwd6-ji9j/rows.csv?accessType=DOWNLOAD
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://data.medicare.gov/api/views/dc76-gh7x/rows.csv?accessType=DOWNLOAD
 
-No Funciona
+Arreglado
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#https://www.data.gov/app/uploads/2014/06/NIH-Core-Facilities.csv --> muchas columnas vacias
 
 data.gov.uk
@@ -52,10 +54,9 @@ Funciona
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://maps.bristol.gov.uk/instantatlas/bopen/energy_generation_wc_140114.csv
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.leedsdatamill.org/storage/f/2014-06-20T14%3A24%3A52.174Z/accidents2013.csv
 
-No Funciona
+Arreglado
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.uk/sites/default/files/Surface_Water_Status_Objectives_2012.csv --> Tiene columnas con nombre repetido
-- http://www.leedsdatamill.org/storage/f/2014-03-05T15%3A15%3A07.685Z/council-energy-consumtion.csv --> Algunas columnas de numeros no se consideran como numeros, porque tienen muchos espacios en blanco
-
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://www.leedsdatamill.org/storage/f/2014-03-05T15%3A15%3A07.685Z/council-energy-consumtion.csv
 data.gov.au
 
 Funciona
@@ -71,11 +72,13 @@ Funciona
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T203235/tmpFW_bu_afl.csv
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/dataset/553b3049-2b8b-46a2-95e6-640d7986a8c1/resource/9fee88ed-dc75-4b6c-88b7-c8a6f04f86e7/download/toiletmapexport141001090000.csv
 
+Arreglado
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T181629/tmpAFY_mhskating.csv
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T180848/tmpli5RW4water-use.csv
+
 No Funciona
 - http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/dataset/cbd17c8c-7ab5-45d7-9c00-bf4b2678b248/resource/2d38b209-a499-4b54-bac3-3d89bbc1a789/download/pldirectorysep14.csv --> No había considerado que latitude y longitude podían ser substrings
-- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T181629/tmpAFY_mhskating.csv --> Muchas columnas en blanco
-- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T180848/tmpli5RW4water-use.csv --> 2 columnas con el mismo nombre
-- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T185139/tmpcSTzXmtracking.csv --> Columnas en blanco
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T185139/tmpcSTzXmtracking.csv --> Existen columnas sin nombre que contienen datos
 
 data.gc.ca
 
@@ -102,3 +105,14 @@ Problemas frecuentes:
 - Nombres de columnas muy largas hacen que se superpongan algunos textos
 - Multiples tablas: Hay muchos csv que tienen más de una tabla adentro, una despues de la otra
 - Muchos archivos son .zip
+
+Problema general:
+A pesar de que se "soluciono" el problema de columnas con nombre repetido, se solucionó solo visualmente (no se ven 2 histogramas hacia abajo). Relacionado a esto existe otro problema y es que el d3 maneja cada fila del csv como un objeto, en donde el nombre de la columna indica una llave. Esto provoca que a nivel de representación, no se puede tener el mismo nombre de columna 2 veces. Esto provoca que en la visualización, cuando hay 2 columnas con nombre repetido:
+
+1. En el preview de la tabla, se ve el nombre repetido en el header, pero no se agregan los datos (provocando ademas que los datos se vean desfasados).
+2. En la visualización, ambas columnas muestran la misma información.
+
+El ejemplo más corto de este problema es este dataset:
+- http://viz.niclabs.cl/visualoverviews/demo/visual-overview/test.html#http://data.gov.au/storage/f/2013-05-12T180848/tmpli5RW4water-use.csv
+
+En donde el porcentaje de corrio un espacio hacia la izquierda, y los boxplot e histograma de ambas columnas son exactamente iguales.
