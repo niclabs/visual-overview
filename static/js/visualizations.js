@@ -3,17 +3,24 @@
 /* General method for choosing wich visualization to draw*/
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
+		addSelect(header[position],position, columnTypes[position]);
 		drawMap(data, columnTypes, header, position);
 		drawHistogram(data, header[position], position);
+	}else if(columnTypes[position] == "longitude"){
+		addSelect(header[position],position, columnTypes[position]);
+		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "date"){
+		addSelect(header[position],position, columnTypes[position]);
 		drawCalendar(data, columnTypes, header, position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "default"){
 		var defaultType = getDefaultType(data, header[position]);
 		if(defaultType == "numerical"){
+			addSelect(header[position],position, "numerical");
 			drawBoxPlot(data, header[position], position);		
 		}
 		else{
+			addSelect(header[position],position, "numerical");
 			drawWordCloud(data, header[position], position);
 		}
 		drawHistogram(data, header[position], position);
@@ -46,6 +53,37 @@ function getDefaultType(data, key){
 
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function addSelect(key,position, columnType){
+	var options = ['Numerical', 'Text', 'Latitude', 'Longitude', 'Date'];
+	var newSelect = document.createElement('select');
+	$(newSelect).attr("class", key); 
+	var index = 0;
+	for(element in options){
+	   var opt = document.createElement("option");
+	   opt.value= index;
+	   opt.innerHTML = options[element]; // whatever property it has
+	   
+	   if(columnType == options[element].toLowerCase()){
+	   	opt.selected = "selected";	
+	   }
+	
+
+	   // then append it to the select element
+	   newSelect.appendChild(opt);
+	   index++;
+	}
+
+	var id = "select"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id);
+	$("#select").append(td);
+	var text = $("<h6>").html("Data type");
+	td.append(text);
+	td.append(newSelect);
+	
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

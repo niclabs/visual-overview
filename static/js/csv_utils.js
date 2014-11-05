@@ -20,6 +20,7 @@ function initialize_visualization(url){
 				visualize(data[0], data[1], data[2], columnTypes);
 			}catch(err){
 				alert("An error ocurred while processing the dataset");
+				console.log(err);
 				d3.select("#headerrow").selectAll("th").remove();
     				d3.select("#tbody").selectAll("tr").remove();
 				d3.select("#map-canvas").html("");
@@ -58,7 +59,8 @@ function visualize(annotations, rows, footer, columnTypes){
 			d3.select("#headerrow").append("th").style("width", "210px").html(header[j]);
 		}
 	}
-
+	
+	d3.select('#tbody').append("tr").attr("id", "select");
 	d3.select("#tbody").append("tr").attr("id", "row");
 	d3.select("#tbody").append("tr").attr("id", "hist");
 
