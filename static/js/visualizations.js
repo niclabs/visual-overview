@@ -20,7 +20,7 @@ function drawVisualization(data, header, columnTypes, position){
 			drawBoxPlot(data, header[position], position);		
 		}
 		else{
-			addSelect(header[position],position, "numerical");
+			addSelect(header[position],position, "text");
 			drawWordCloud(data, header[position], position);
 		}
 		drawHistogram(data, header[position], position);
