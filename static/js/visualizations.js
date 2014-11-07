@@ -3,24 +3,24 @@
 /* General method for choosing wich visualization to draw*/
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
-		addSelect(header[position],position, columnTypes[position]);
+		//addSelect(header[position],position, columnTypes[position]);
 		drawMap(data, columnTypes, header, position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "longitude"){
-		addSelect(header[position],position, columnTypes[position]);
+		//addSelect(header[position],position, columnTypes[position]);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "date"){
-		addSelect(header[position],position, columnTypes[position]);
+		//addSelect(header[position],position, columnTypes[position]);
 		drawCalendar(data, columnTypes, header, position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "default"){
 		var defaultType = getDefaultType(data, header[position]);
 		if(defaultType == "numerical"){
-			addSelect(header[position],position, "numerical");
+			//addSelect(header[position],position, "numerical");
 			drawBoxPlot(data, header[position], position);		
 		}
 		else{
-			addSelect(header[position],position, "text");
+			//addSelect(header[position],position, "text");
 			drawWordCloud(data, header[position], position);
 		}
 		drawHistogram(data, header[position], position);
