@@ -3,24 +3,25 @@
 /* General method for choosing wich visualization to draw*/
 function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
-		//addSelect(header[position],position, columnTypes[position]);
+		addSelect(header[position],position, columnTypes[position]);
 		drawMap(data, columnTypes, header, position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "longitude"){
-		//addSelect(header[position],position, columnTypes[position]);
+		addSelect(header[position],position, columnTypes[position]);
+		drawDummy(header, position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "date"){
-		//addSelect(header[position],position, columnTypes[position]);
+		addSelect(header[position],position, columnTypes[position]);
 		drawCalendar(data, columnTypes, header, position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "default"){
 		var defaultType = getDefaultType(data, header[position]);
 		if(defaultType == "numerical"){
-			//addSelect(header[position],position, "numerical");
+			addSelect(header[position],position, "numerical");
 			drawBoxPlot(data, header[position], position);		
 		}
 		else{
-			//addSelect(header[position],position, "text");
+			addSelect(header[position],position, "text");
 			drawWordCloud(data, header[position], position);
 		}
 		drawHistogram(data, header[position], position);
@@ -58,7 +59,9 @@ function isNumber(n) {
 function addSelect(key,position, columnType){
 	var options = ['Numerical', 'Text', 'Latitude', 'Longitude', 'Date'];
 	var newSelect = document.createElement('select');
-	$(newSelect).attr("class", key); 
+	var id = "select" + position;
+	$(newSelect).attr("class", key);
+	$(newSelect).attr("id", id);
 	var index = 0;
 	for(element in options){
 	   var opt = document.createElement("option");
@@ -75,6 +78,32 @@ function addSelect(key,position, columnType){
 	   index++;
 	}
 
+	$(newSelect).on("change",function(){
+		var childPosition = parseInt(position)+1;
+		childPosition = childPosition.toString();
+		var newType = $('#'+id+' option:selected').text();
+		var drawPosition = $("#row td:nth-child("+childPosition+")").attr("id");
+		var url = d3.select("#url").node().value;
+		var request = d3.text("/column?url="+url+"&number="+position)
+			.on("load",  function(data){
+				if(data == null){
+					alert("Couldn't retrieve column");
+					return;
+				}
+				try{
+					reDraw(data, newType, drawPosition, position, key)
+				}catch(err){
+					alert("An error ocurred while processing the dataset");			
+				}
+			})
+			.on("error", function(){
+				alert("Data couldn't be loaded");
+				$("#visualization").trigger("loaded");
+			});
+		
+		request.get();
+	});
+
 	var id = "select"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id);
@@ -84,6 +113,43 @@ function addSelect(key,position, columnType){
 	td.append(newSelect);
 	
 
+}
+
+function reDraw(data, newType, drawPosition, position, key){
+	data = data.split("\n");
+	if(newType == "Text"){
+		var words = {};
+		for(var i=0; i<data.length; i++){
+			var w = data[i].toString().toLowerCase();
+				
+			if(isStopWord(w)){
+				continue;
+			}
+			
+			if(words[w] ==  undefined){
+				words[w] = 1;
+			}else{
+				words[w]++;
+			}
+		}
+		wordArray = [];
+		for(var i in words){
+			wordArray.push({text: i, size: words[i]});
+		}
+		//Get wordcloud
+		topk = getTopK(wordArray, 50);
+	 	id = "wc"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+		
+		d3.select("#"+drawPosition).html("");
+
+		d3.select("#"+drawPosition).append("h6").html("Most common values");
+		wordcloud(topk, drawPosition);
+		console.log("here");
+	
+	}
+	else{
+		alert("SOON!");	
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -352,7 +418,7 @@ function drawMap(data, columnTypes, header, position){
 	var canvasId = "canvas"+id;
 
 	var mapCanvas = $("<div>", {id: canvasId, style: "width: 400px; height: 200px; position: absolute; background-color: transparent;"});
-	var td = $("<td>").attr("class", "1rowaa").attr("id", id).attr("colspan", 2).css("width", "200px").css("height","200px");
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id).attr("colspan", 1).css("width", "200px").css("height","200px");
 	$("#row").append(td);
 	var text = $("<h6>").html("Map");
 	td.append(text);
@@ -532,4 +598,14 @@ function getDateFormat(data, key){
 		dateFormat = ["day", "month", "year"];
 	}
 	return dateFormat;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////* Dummy visualization *//////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+function drawDummy(header,position){
+	var id = "dummy"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
+	$("#row").append(td);
 }

@@ -32,7 +32,7 @@ def getColumn():
 		column.append(row[number])
 		i = i+1
 
-	return ' | '.join(column)
+	return '\n'.join(column)
 
 def determineSeparator(data):
 	separatorList = [',',';','|','\t']
