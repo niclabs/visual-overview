@@ -13,12 +13,14 @@ function drawVisualization(data, header, columnTypes, position){
 	}else if(columnTypes[position] == "date"){
 		addSelect(header[position],position, columnTypes[position]);
 		drawCalendar(data, columnTypes, header, position);
+		//drawWordCloud(data, header[position], position);
 		drawHistogram(data, header[position], position);
 	}else if(columnTypes[position] == "default"){
 		var defaultType = getDefaultType(data, header[position]);
 		if(defaultType == "numerical"){
 			addSelect(header[position],position, "numerical");
-			drawBoxPlot(data, header[position], position);		
+			drawBoxPlot(data, header[position], position);
+			//drawWordCloud(data, header[position], position);
 		}
 		else{
 			addSelect(header[position],position, "text");
@@ -93,12 +95,12 @@ function addSelect(key,position, columnType){
 				try{
 					reDraw(data, newType, drawPosition, position, key)
 				}catch(err){
+					console.log(err);
 					alert("An error ocurred while processing the dataset");			
 				}
 			})
 			.on("error", function(){
 				alert("Data couldn't be loaded");
-				$("#visualization").trigger("loaded");
 			});
 		
 		request.get();
@@ -118,33 +120,43 @@ function addSelect(key,position, columnType){
 function reDraw(data, newType, drawPosition, position, key){
 	data = data.split("\n");
 	if(newType == "Text"){
-		var words = {};
+		reDrawWordCloud(data, drawPosition)
+	}
+	else if(newType == "Numerical"){
+		var check = false;
 		for(var i=0; i<data.length; i++){
-			var w = data[i].toString().toLowerCase();
-				
-			if(isStopWord(w)){
-				continue;
+			if(isNumber(data[i])){
+				check = true;				
+				break;	
 			}
+		}
+		if(check == true)
+			reDrawBoxPlot(data, drawPosition, key, position);
+		else
+			alert("Cannot Parse as Number");
+	}
+	else if(newType == "Date"){
+		var ddmmyyyy = 0;
+		var mmddyyyy = 0;
+		for(var i=0; i<data.length; i++){
+			date = data[i].split(/[-.\/]+/)
+			if(date.length < 3)
+				continue;			
+			if(date[0]<=12 && date[1]<=31)
+				ddmmyyyy = ddmmyyyy+1;			
+			if(date[0]<=31 && date[1]<=12)
+				mmddyyyy = mmddyyyy+1;			
+		}
+		if(ddmmyyyy > 0 || mmddyyyy > 0){
+			if(ddmmyyyy>mmddyyyy)
+				dateFormat = ["day", "month", "year"]; 			
+			else
+				dateFormat = ["month", "day", "year"];
 			
-			if(words[w] ==  undefined){
-				words[w] = 1;
-			}else{
-				words[w]++;
-			}
-		}
-		wordArray = [];
-		for(var i in words){
-			wordArray.push({text: i, size: words[i]});
-		}
-		//Get wordcloud
-		topk = getTopK(wordArray, 50);
-	 	id = "wc"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
-		
-		d3.select("#"+drawPosition).html("");
-
-		d3.select("#"+drawPosition).append("h6").html("Most common values");
-		wordcloud(topk, drawPosition);
-		console.log("here");
+			reDrawCalendar(data, drawPosition, key, position, dateFormat);
+		}else{
+			alert("Cannot Parse as Date");
+		}		
 	
 	}
 	else{
@@ -608,4 +620,163 @@ function drawDummy(header,position){
 	var id = "dummy"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
 	$("#row").append(td);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////* Redraw Functions *///////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+function reDrawWordCloud(data, drawPosition){
+	var words = {};
+		for(var i=0; i<data.length; i++){
+			var w = data[i].toString().toLowerCase();
+				
+			if(isStopWord(w)){
+				continue;
+			}
+			
+			if(words[w] ==  undefined){
+				words[w] = 1;
+			}else{
+				words[w]++;
+			}
+		}
+		wordArray = [];
+		for(var i in words){
+			wordArray.push({text: i, size: words[i]});
+		}
+		//Get wordcloud
+		topk = getTopK(wordArray, 50);
+		
+		d3.select("#"+drawPosition).html("");
+
+		d3.select("#"+drawPosition).append("h6").html("Most common values");
+		wordcloud(topk, drawPosition);
+	
+}
+
+function reDrawBoxPlot(data, drawPosition, key, position){
+		// Create an array only with the numbers
+	var numArray = [];
+	for(var i = 0; i < data.length; i++){
+		if(data[i] == undefined){
+			continue;		
+		}
+		if(isNaN(parseFloat(data[i].replace("$","").replace("%","")))){
+			continue;		
+		}
+		numArray.push(parseFloat(data[i].replace("$","").replace("%","")));
+	}
+	// Sort the array;
+	numArray.sort(function(a, b) {
+  			return a - b;
+		});
+	// Get data
+	var minimum = parseFloat(numArray[0]);
+	var maximum = parseFloat(numArray[numArray.length-1]);
+	var median = parseFloat(getMedian(numArray));
+	var lowerQ = parseFloat(getMedian(numArray.slice(0, Math.floor(numArray.length/2))));
+	var upperQ = parseFloat(getMedian(numArray.slice(Math.floor(numArray.length/2), numArray.length)));
+
+	// Create container div
+	d3.select("#"+drawPosition).html("");
+	var canvasId = "canvasbp"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+
+
+	var boxPlotCanvas = $("<div>", {id: canvasId, style: "width: 200px; height: 200px; position: absolute; background-color: transparent;"});
+
+	var text = $("<h6>").html("Data");
+	$("#"+drawPosition).append(text);
+	$("#"+drawPosition).append(boxPlotCanvas);
+	
+	// Draw box plot
+	$(function () {
+	    $('#'+canvasId).highcharts({
+
+		chart: {
+		    type: 'boxplot'
+		},
+ 		
+		title: {
+            		text: ''
+        	},
+
+		legend: {
+		    enabled: false
+		},
+
+		xAxis: {
+		    categories: [''],
+		    title: {
+		        text: ''
+		    }
+		},
+
+		yAxis: {
+		    title: {
+		        text: 'Data Values'
+		    },
+		    plotLines: [{
+		        value: median,
+		        color: 'red',
+		        width: 1,
+		        label: {
+		            align: 'center',
+		            style: {
+		                color: 'gray'
+		            }
+		        }
+		    }]
+		},
+
+		series: [{
+		    name: 'Observations',
+		    data: [
+		        [minimum, lowerQ, median, upperQ, maximum],
+		    ],
+		    tooltip: {
+		        headerFormat: '<em>Experiment No {point.key}</em><br/>'
+		    }
+		}]
+
+	    });
+	});
+}
+
+function reDrawCalendar(data, drawPosition, key, position, dateFormat){
+	var googleData = new google.visualization.DataTable();
+	googleData.addColumn('date', 'Date');
+	googleData.addColumn('number', 'Ocurrences');
+	var dateOcurrences = [];
+
+	var canvasId = "canvascal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+
+	var calendarCanvas = $("<div>", {id: canvasId, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
+	var text = $("<h6>").html("Date occurrences");
+	d3.select("#"+drawPosition).html("");
+	$("#"+drawPosition).append(text);
+	$("#"+drawPosition).append(calendarCanvas);
+
+	for(var i in data){
+		if(data[i]== undefined){
+			continue;
+		}
+		date = data[i];
+		if(dateOcurrences.indexOf(date) == -1){
+			dateOcurrences.push(date);
+			ocurrences = countDateOcurrences(date, data, dateKey);
+			date = createDate(dateFormat, date);
+			if(isNaN(date)){
+				continue;
+			}
+			googleData.addRow([date, ocurrences]);
+		}
+	}
+
+	var chart = new google.visualization.AnnotationChart(document.getElementById(canvasId));
+	var options = {
+          displayAnnotations: true
+        };
+	chart.draw(googleData, options);
+
 }
