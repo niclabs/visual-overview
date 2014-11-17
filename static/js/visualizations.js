@@ -515,32 +515,38 @@ function ConvertDMSToDD(degrees, minutes, seconds, direction) {
 /////////////////////////////////////////////////////////////////////////////
 
 function drawCalendar(data, columnTypes, header, position){
+	//Create Variables	
 	var dateKey = header[position];
 	var dateFormat = getDateFormat(data, dateKey);
 	var googleData = new google.visualization.DataTable();
-	googleData.addColumn('date', 'Date');
-	googleData.addColumn('number', 'Ocurrences');
 	var dateOcurrences = [];
-
 	var id = "cal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
 	var canvasid = "canvas"+id;
-
 	var calendarCanvas = $("<div>", {id: canvasid, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
 	var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px");
-	$("#row").append(td);
 	var text = $("<h6>").html("Date occurrences");
-	td.append(text);
-	td.append(calendarCanvas);
 
+	//Check if data is parseable as date
 	if(dateFormat == "Error"){
 		alert("Date couldn't be parsed");
 		return;
 	}
 
+	//Start adding info
+	googleData.addColumn('date', 'Date');
+	googleData.addColumn('number', 'Ocurrences');
+	
+	$("#row").append(td);
+	td.append(text);
+	td.append(calendarCanvas);
+
 	for(var i in data){
 		if(data[i][dateKey] == undefined){
 			continue;
+		}else if(badDate(data[i][dateKey])){
+			continue;	
 		}
+		
 		date = data[i][dateKey];
 		if(dateOcurrences.indexOf(date) == -1){
 			dateOcurrences.push(date);
@@ -552,7 +558,8 @@ function drawCalendar(data, columnTypes, header, position){
 			googleData.addRow([date, ocurrences]);
 		}
 	}
-
+	
+	//Draw
 	var chart = new google.visualization.AnnotationChart(document.getElementById(canvasid));
 	var options = {
           displayAnnotations: true
@@ -561,7 +568,9 @@ function drawCalendar(data, columnTypes, header, position){
 }
 
 function createDate(dateFormat, date){
-	dateArray = date.split(/[^\d\w]+/);
+	dateArray = date.split(/[-\/.]/);
+	console.log(date);
+	console.log(dateArray);
 	var date = new Date(dateArray[dateFormat.indexOf("year")],dateArray[dateFormat.indexOf("month")],dateArray[dateFormat.indexOf("day")]);
 	return date;
 }
@@ -578,38 +587,34 @@ function countDateOcurrences(date, data, key){
 }
 
 function getDateFormat(data, key){
-	var dateFormat = [];
+	var ddmmyyyy = 0;
+	var mmddyyyy = 0;
+	var dateFormat = "Error";
 	for(var i in data){
 		if(data[i][key] == undefined){
 			continue;
 		}
-		var dateArray = data[i][key].split(/[^\d\w]+/);
+		var dateArray = data[i][key].split(/[-\/.]/);
 		if(dateArray.length < 3){
-			dateFormat = "Error";
-			return dateFormat;
-		}
-		else if(dateFormat[0] != undefined && dateFormat[1] != undefined && dateFormat[2] != undefined){
+			continue;
+		}else if(dateArray[2] > 12){
+			dateFormat = ["day", "month", "year"];
+			break;
+		}else if(dateArray[1] > 12){
+			dateFormat = ["month", "day", "year"];
 			break;
 		}
-		else{
-			for(var j = 0; j < 3; j++){
-				if(dateArray[j]>12 && dateArray[j]<31 && dateFormat.indexOf("day") == -1){
-					dateFormat[j] = "day";
-				}
-				else if(dateArray[j] > 31){
-					dateFormat[j] = "year";
-				}
-				else if(dateFormat[j] == undefined && dateFormat.indexOf("day")>=0 && dateFormat.indexOf("year")>=0){
-					dateFormat[j] = "month";
-				}
-			}
-		}
-	}
-	//default
-	if(dateFormat.indexOf("day") == -1 || dateFormat.indexOf("month") == -1 || dateFormat.indexOf("year") == -1){
-		dateFormat = ["day", "month", "year"];
 	}
 	return dateFormat;
+}
+
+function badDate(date){
+	var dateArray = date.split(/[-\/.]/);
+	var isBad = false;
+	if(dateArray.length < 3){
+		isBad = true;	
+	}
+	return isBad;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -744,27 +749,39 @@ function reDrawBoxPlot(data, drawPosition, key, position){
 }
 
 function reDrawCalendar(data, drawPosition, key, position, dateFormat){
+	//Create Variables	
 	var googleData = new google.visualization.DataTable();
+	var dateOcurrences = [];
+	var canvasid = "canvascal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+	var calendarCanvas = $("<div>", {id: canvasid, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
+	var text = $("<h6>").html("Date occurrences");
+
+	//Check if data is parseable as date
+	if(dateFormat == "Error"){
+		alert("Date couldn't be parsed");
+		return;
+	}
+
+	//Start adding info
 	googleData.addColumn('date', 'Date');
 	googleData.addColumn('number', 'Ocurrences');
-	var dateOcurrences = [];
-
-	var canvasId = "canvascal"+header[position].toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
-
-	var calendarCanvas = $("<div>", {id: canvasId, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
-	var text = $("<h6>").html("Date occurrences");
+	
+	
 	d3.select("#"+drawPosition).html("");
 	$("#"+drawPosition).append(text);
 	$("#"+drawPosition).append(calendarCanvas);
 
 	for(var i in data){
-		if(data[i]== undefined){
+		if(data[i] == undefined){
 			continue;
+		}else if(badDate(data[i])){
+			continue;	
 		}
+		
 		date = data[i];
 		if(dateOcurrences.indexOf(date) == -1){
 			dateOcurrences.push(date);
-			ocurrences = countDateOcurrences(date, data, dateKey);
+			ocurrences = countDateOcurrencesT(date, data);
 			date = createDate(dateFormat, date);
 			if(isNaN(date)){
 				continue;
@@ -772,11 +789,22 @@ function reDrawCalendar(data, drawPosition, key, position, dateFormat){
 			googleData.addRow([date, ocurrences]);
 		}
 	}
-
-	var chart = new google.visualization.AnnotationChart(document.getElementById(canvasId));
+	
+	//Draw
+	var chart = new google.visualization.AnnotationChart(document.getElementById(canvasid));
 	var options = {
           displayAnnotations: true
         };
 	chart.draw(googleData, options);
+}
 
+function countDateOcurrencesT(date, data){
+	var i = 0;
+	for(var j in data){
+		var compDate = data[j];
+		if(date == compDate){
+			i++;
+		}
+	}
+	return i;
 }
