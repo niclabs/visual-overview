@@ -10,8 +10,8 @@ function drawVisualization(data, header, columnTypes, position){
 		var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
 		var text = $("<h6>").html("Map");
 
-		addSelect(header[position],position, columnTypes[position], data, id);
-		drawMap(data, columnTypes, header, td, id, text, true);
+		addSelect(header,position, columnTypes[position], data, id);
+		drawMap(data, columnTypes, header, td, id, text, true, "", "");
 		drawHistogram(data, header[position], position);
 		
 	}else if(columnTypes[position] == "longitude"){
@@ -19,7 +19,7 @@ function drawVisualization(data, header, columnTypes, position){
 		var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
 		$("#row").append(td);
 
-		addSelect(header[position],position, columnTypes[position], data, id);
+		addSelect(header,position, columnTypes[position], data, id);
 		drawHistogram(data, header[position], position);
 
 	}else if(columnTypes[position] == "date"){
@@ -27,7 +27,7 @@ function drawVisualization(data, header, columnTypes, position){
 		var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px");
 		var text = $("<h6>").html("Date occurrences");
 
-		addSelect(header[position],position, columnTypes[position], data, id);
+		addSelect(header,position, columnTypes[position], data, id);
 		drawCalendar(data, header[position], td, id, text, true);
 		drawHistogram(data, header[position], position);
 
@@ -39,12 +39,12 @@ function drawVisualization(data, header, columnTypes, position){
 			var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
 			var text = $("<h6>").html("Data");
 
-			addSelect(header[position],position, defaultType, data, id);
+			addSelect(header,position, defaultType, data, id);
 			drawBoxPlot(data, header[position], td, id, text, true);
 		}
 		else{
 
-			addSelect(header[position],position, defaultType, data, id);
+			addSelect(header,position, defaultType, data, id);
 			drawWordCloud(data, header[position], id, true);
 		}
 		drawHistogram(data, header[position], position);
@@ -83,7 +83,8 @@ function isNumber(n) {
 ////////////////////////////* Select and Redraw *////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function addSelect(key,position, columnType, data, tdId){
+function addSelect(header, position, columnType, data, tdId){
+	var key = header[position];
 	var options = ['BoxPlot', 'WordCloud', 'Map', 'Time Serie'];
 	var newSelect = document.createElement('select');
 	var id = "select" + position;
@@ -108,7 +109,7 @@ function addSelect(key,position, columnType, data, tdId){
 	$(newSelect).on("change",function(){
 
 		var newType = $('#'+id+' option:selected').text();
-		reDraw(data, key, tdId, newType);
+		reDraw(data, header, position, tdId, newType);
 	});
 
 	var id = "select"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
@@ -144,7 +145,8 @@ function translate(columnType){
 	return t;
 }
 
-function reDraw(data, key, tdId, newType){
+function reDraw(data, header, position, tdId, newType){
+	var key = header[position];
 
 	if(newType == "WordCloud"){
 		drawWordCloud(data, key, tdId, false);
@@ -168,6 +170,21 @@ function reDraw(data, key, tdId, newType){
 		var text = $("<h6>").html("Date occurrences");
 		drawCalendar(data, key, td, tdId, text, false);		
 	
+	}
+	else if(newType == "Map"){
+		var td = $("#"+tdId);
+		var text = $("<h6>").html("Date occurrences");
+		var nextpos = parseInt(position)+1;
+		var prevpos = parseInt(position)-1;
+		if(checkLatitude(data, key) && checkLatitude(data, header[nextpos])){
+			drawMap(data, [], header, td, tdId, text, false, key, header[nextpos]);	
+		}else if(checkLatitude(data, key) && checkLatitude(data, header[prevpos])){
+			td = td.prev();
+			tdId = td.attr("id");
+			drawMap(data, [], header, td, tdId, text, false, header[prevpos], key);	
+		}else{
+			alert("Cannot Parse as Map");		
+		}
 	}
 	else{
 		alert("SOON!");	
@@ -432,10 +449,12 @@ function isEven(n) {
 ////////////////////////////* Map visualization *////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function drawMap(data, columnTypes, header, td, id, text, auto){
+function drawMap(data, columnTypes, header, td, id, text, auto, latKey, longKey){
 	var sample = getRandomSample(data, 200);
-	var latKey = getKeyName("latitude", columnTypes, header);
-	var longKey = getKeyName("longitude", columnTypes, header);
+	if(latKey == ""){
+		latKey = getKeyName("latitude", columnTypes, header);
+		longKey = getKeyName("longitude", columnTypes, header);
+	}
 	var llRegex = /^(\-?\d+(\.\d+)?)/g;
 	var mapOptions = {
           center: new google.maps.LatLng(0, 0),
@@ -445,7 +464,12 @@ function drawMap(data, columnTypes, header, td, id, text, auto){
 	var canvasId = "canvas"+id;
 	var mapCanvas = $("<div>", {id: canvasId, style: "width: 400px; height: 200px; position: absolute; background-color: transparent;"});
 
-	$("#row").append(td);
+	if(auto == true)
+		$("#row").append(td);
+	else
+		td.empty();
+		td.next().empty();
+
 	td.append(text);
 	td.append(mapCanvas);
 
