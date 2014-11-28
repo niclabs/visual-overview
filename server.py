@@ -15,24 +15,15 @@ def index():
 @app.route("/proxy")
 def proxy():
 	r = requests.get(request.args.get('url'))
-	return r.text
-
-@app.route("/column")
-def getColumn():
-	r = requests.get(request.args.get('url'))
-	number = int(request.args.get('number'))
 	text = r.text
 	separator = determineSeparator(text)
 	csvFile = getTable(text, separator)
 	column = []
-	i = 0
-
+	
 	for line in csvFile.readlines():
-		row = line.split(separator)
-		column.append(row[number])
-		i = i+1
-
-	return '\n'.join(column)
+		column.append(line)
+	
+	return ''.join(column)
 
 def determineSeparator(data):
 	separatorList = [',',';','|','\t']

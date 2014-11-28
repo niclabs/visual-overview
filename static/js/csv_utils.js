@@ -7,7 +7,6 @@ function initialize_visualization(url){
 	d3.select("#map-canvas").html("");
 	$("#loadingDiv").show();
 
-	/*var request = d3.text(url)*/
 	var request = d3.text("/proxy?url="+url)
 		.on("load",  function(data){
 			if(data == null){
@@ -15,9 +14,12 @@ function initialize_visualization(url){
 				return;
 			}
 			try{
-				data = detectHeader(data, determineSeparator(data));
-				columnTypes = determineColumnTypes(data[1][0]);
-				visualize(data[0], data[1], data[2], columnTypes);
+				var separator = determineSeparator(data);
+				var dsv = d3.dsv(separator, "text/plain");
+				var rows = dsv.parseRows(data);
+				console.log(rows);
+				columnTypes = determineColumnTypes(rows[0]);
+				visualize(rows, columnTypes);
 			}catch(err){
 				alert("An error ocurred while processing the dataset");
 				console.log(err);
@@ -35,7 +37,7 @@ function initialize_visualization(url){
 	setTimeout(function(){request.get();}, 500);
 }
 
-function visualize(annotations, rows, footer, columnTypes){
+function visualize(rows, columnTypes){
 	//Set the information in javascript object notation
     	data = d3.csv.formatRows(rows);
 	data = d3.csv.parse(data);
@@ -86,58 +88,4 @@ function determineSeparator(data){
 		}
 	}
 	return separatorList[sPosition];
-}
-
-function detectHeader(data, separator){
-	var annotations = [];
-	var dsv = d3.dsv(separator, "text/plain");
-	var rows = dsv.parseRows(data);
-	var footer = [];
-	var length = rows.length;
-	for(var i=0; i<length; i++){
-		if(isHeader(rows[i])){
-			annotations = rows.splice(0,i);
-			break;
-		}
-	}
-	footer = detectFooter(rows);
-	return [annotations, rows, footer];
-
-}
-
-function detectFooter(rows){
-	var footer = [];
-	rows.reverse();
-	var length = rows.length;
-	for(var i=0; i<length; i++){
-		if(isHeader(rows[i])){
-			footer = rows.splice(0,i);
-			break;
-		}
-	}
-	rows.reverse();
-	footer.reverse();
-	return footer;
-}
-
-function isHeader(row){
-	var minimum = 2;
-	var maxEmpty = Math.floor(row.length/2);
-	if(containsEmpty(row, maxEmpty) || row.length < minimum)
-		return false;
-	return true;
-}
-
-function containsEmpty(row, maxEmpty){
-	var empty = 0;
-	var isEmpty = false;
-	for(var i=0; i<row.length; i++){
-		if(row[i] == ""){
-			empty++;
-		}
-	}
-	if(empty>maxEmpty){
-		isEmpty = true;
-	}
-	return isEmpty;
 }
