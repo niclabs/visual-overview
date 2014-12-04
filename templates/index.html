@@ -6,10 +6,19 @@
       	function load() {
         	if(window.location.hash) {
  			var hash = window.location.hash.substring(1);
-			initialize_visualization(hash);
-			document.getElementById('url').value=hash;
+			hash = hash.split("&");
+			url = decodeURIComponent(hash[0]);
+			initialize_visualization(url);
+			document.getElementById('url').value=hash[0];
 			$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
-			}
+			$("#visualization").on("loaded", function(){
+				for(var i=1; i<hash.length; i++){
+					var change = hash[i].split("=");
+					$("#"+change[0]).val(change[1]);
+					$("#"+change[0]).trigger("change");
+				}			
+			});
+		}
       	}
       	window.onload = load;
     </script>
@@ -148,7 +157,7 @@
 	$("#go").on("click", function(){
 		
 		var url = d3.select("#url").node().value;
-		window.location.hash=url;
+		window.location.hash=encodeURIComponent(url);
 		initialize_visualization(url);
 		$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
 	});
