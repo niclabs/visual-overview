@@ -17,7 +17,6 @@ function initialize_visualization(url){
 				var separator = determineSeparator(data);
 				var dsv = d3.dsv(separator, "text/plain");
 				var rows = dsv.parseRows(data);
-				console.log(rows);
 				columnTypes = determineColumnTypes(rows[0]);
 				visualize(rows, columnTypes);
 			}catch(err){
