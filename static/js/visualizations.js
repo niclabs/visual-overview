@@ -110,7 +110,7 @@ function addSelect(header, position, columnType, data, tdId){
 
 		var newType = $('#'+id+' option:selected').text();
 		reDraw(data, header, position, tdId, newType);
-		window.location.hash=window.location.hash + "&select" + position + "=" + newType;
+		window.location.hash = location.href.split("#")[1] + "&select" + position + "=" + newType;
 	});
 
 	var id = "select"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;

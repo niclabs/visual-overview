@@ -4,9 +4,10 @@
 	<title>Preview visualizations</title>
 	<script>
       	function load() {
-        	if(window.location.hash) {
- 			var hash = window.location.hash.substring(1);
+        	if(location.href.split("#")[1]) {
+ 			var hash = location.href.split("#")[1];
 			hash = hash.split("&");
+			console.log(hash[0]);
 			url = decodeURIComponent(hash[0]);
 			initialize_visualization(url);
 			document.getElementById('url').value=hash[0];
