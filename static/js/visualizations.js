@@ -110,7 +110,7 @@ function addSelect(header, position, columnType, data, tdId){
 
 		var newType = $('#'+id+' option:selected').text();
 		reDraw(data, header, position, tdId, newType);
-		window.location.hash = location.href.split("#")[1] + "&select" + position + "=" + newType;
+		updateURI(newType, position);
 	});
 
 	var id = "select"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
@@ -122,6 +122,29 @@ function addSelect(header, position, columnType, data, tdId){
 	td.append(newSelect);
 	
 
+}
+function updateURI(newType, position){
+	console.log(position);
+	var key = "select"+position;
+	var hash = location.href.split("#")[1].split("&");
+	var newURI = hash[0];
+	var update = false;
+	for(var i = 1; i < hash.length; i++){
+		var select = hash[i].split("=");
+		if(select[0] == key){
+			hash[i] = key+"="+newType;
+			update = true;
+			break;		
+		}
+	}
+	
+	for(var i = 1; i < hash.length; i++){
+		newURI = newURI+"&"+hash[i];
+	}
+	if(update)
+		window.location.hash = newURI;
+	else
+		window.location.hash = newURI+"&"+key+"="+newType;
 }
 
 function translate(columnType){
