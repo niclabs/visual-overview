@@ -124,7 +124,6 @@ function addSelect(header, position, columnType, data, tdId){
 
 }
 function updateURI(newType, position){
-	console.log(position);
 	var key = "select"+position;
 	var hash = location.href.split("#")[1].split("&");
 	var newURI = hash[0];

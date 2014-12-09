@@ -4,6 +4,8 @@ import requests
 import StringIO
 import math
 import csv
+import xlrd
+from xlrd import open_workbook
 
 app = Flask(__name__)
 
@@ -15,8 +17,16 @@ def index():
 @app.route("/proxy")
 def proxy():
 	r = requests.get(request.args.get('url'))
-	text = r.text
-	separator = determineSeparator(text)
+	ctype = r.headers["content-type"]
+
+	if ctype == "text/csv":
+		text = r.text
+		separator = determineSeparator(text)
+	else:
+		text = csv_from_excel(StringIO.StringIO(r.content))
+		separator = ";"
+		
+
 	csvFile = getTable(text, separator)
 	column = []
 	
@@ -67,6 +77,25 @@ def containsEmpty(row, maxEmpty):
 		isEmpty = True
 	
 	return isEmpty
+
+
+def csv_from_excel(r):
+	wb = open_workbook(file_contents=r.read())
+	name = ""
+	csv = "";
+	for s in wb.sheets():
+		name = s.name
+		break
+
+	sheet = wb.sheet_by_name(name)
+	for row in range(s.nrows):
+		values = []
+		for col in range(s.ncols):
+			values.append(unicode(s.cell_value(row,col)).encode('utf-8'))
+		csv = csv + ';'.join(values)
+		csv = csv+"\n"
+
+	return csv	
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5001)

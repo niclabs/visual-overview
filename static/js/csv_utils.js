@@ -17,8 +17,12 @@ function initialize_visualization(url){
 				var separator = determineSeparator(data);
 				var dsv = d3.dsv(separator, "text/plain");
 				var rows = dsv.parseRows(data);
-				columnTypes = determineColumnTypes(rows[0]);
-				visualize(rows, columnTypes);
+				var header = rows[0];
+				header = header.filter(function(n){ return n != "" });
+				data = d3.csv.formatRows(rows);
+				data = d3.csv.parse(data);
+				columnTypes = determineColumnTypes(header);
+				visualize(data, header, columnTypes);
 			}catch(err){
 				alert("An error ocurred while processing the dataset");
 				console.log(err);
@@ -36,19 +40,11 @@ function initialize_visualization(url){
 	setTimeout(function(){request.get();}, 500);
 }
 
-function visualize(rows, columnTypes){
-	//Set the information in javascript object notation
-    	data = d3.csv.formatRows(rows);
-	data = d3.csv.parse(data);
-
+function visualize(data, header, columnTypes){
 	//Check if there is data
     	if(data.length == 0){
     	 	return;
     	}
-
-	//Add a preview
-	header = rows[0];
-	header = header.filter(function(n){ return n != "" });
 
 	addPreview(data, 5);
 
