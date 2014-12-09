@@ -7,10 +7,9 @@
         	if(location.href.split("#")[1]) {
  			var hash = location.href.split("#")[1];
 			hash = hash.split("&");
-			console.log(hash[0]);
 			url = decodeURIComponent(hash[0]);
 			initialize_visualization(url);
-			document.getElementById('url').value=hash[0];
+			document.getElementById('url').value=url;
 			$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
 			$("#visualization").on("loaded", function(){
 				for(var i=1; i<hash.length; i++){
