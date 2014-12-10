@@ -50,7 +50,7 @@ function visualize(data, header, columnTypes){
 
 	for(var j in header){
 		if(columnTypes[j] == "date"){
-			d3.select("#headerrow").append("th").style("width", "310px").html(header[j]);
+			d3.select("#headerrow").append("th").style("width", "330px").html(header[j]);
 		}
 		else{
 			d3.select("#headerrow").append("th").style("width", "210px").html(header[j]);

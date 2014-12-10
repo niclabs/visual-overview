@@ -8,10 +8,9 @@ function drawVisualization(data, header, columnTypes, position){
 	if(columnTypes[position] == "latitude"){
 		
 		var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
-		var text = $("<h6>").html("Map");
 
 		addSelect(header,position, columnTypes[position], data, id);
-		drawMap(data, columnTypes, header, td, id, text, true, "", "");
+		drawMap(data, columnTypes, header, td, id, true, "", "");
 		drawHistogram(data, header[position], position);
 		
 	}else if(columnTypes[position] == "longitude"){
@@ -25,10 +24,10 @@ function drawVisualization(data, header, columnTypes, position){
 	}else if(columnTypes[position] == "date"){
 
 		var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px");
-		var text = $("<h6>").html("Date occurrences");
+		var text = $("<h6>").html("Date occurrences for column " + header[position]);
 
 		addSelect(header,position, columnTypes[position], data, id);
-		drawCalendar(data, header[position], td, id, text, true);
+		drawCalendar(data, header[position], td, id, text, true, false);
 		drawHistogram(data, header[position], position);
 
 	}else if(columnTypes[position] == "default"){
@@ -37,7 +36,7 @@ function drawVisualization(data, header, columnTypes, position){
 		if(defaultType == "numerical"){
 			
 			var td = $("<td>").attr("class", "1rowaa").attr("id", id).css("width", "200px").css("height","200px");
-			var text = $("<h6>").html("Data");
+			var text = $("<h6>").html("BoxPlot for column " + header[position]);
 
 			addSelect(header,position, defaultType, data, id);
 			drawBoxPlot(data, header[position], td, id, text, true);
@@ -191,7 +190,7 @@ function reDraw(data, header, position, tdId, newType){
 	else if(newType == "Time Serie"){
 		var td = $("#"+tdId);
 		var text = $("<h6>").html("Date occurrences");
-		drawCalendar(data, key, td, tdId, text, false);		
+		drawCalendar(data, key, td, tdId, text, false, false);		
 	
 	}
 	else if(newType == "Map"){
@@ -199,9 +198,10 @@ function reDraw(data, header, position, tdId, newType){
 		var text = $("<h6>").html("Date occurrences");
 		var nextpos = parseInt(position)+1;
 		var prevpos = parseInt(position)-1;
-		if(checkLatitude(data, key) && checkLatitude(data, header[nextpos])){
+		/* Nota: siempre se asume que latitud esta a la izquierda de longitud */
+		if(checkLatitude(data, key) && checkLongitude(data, header[nextpos])){
 			drawMap(data, [], header, td, tdId, text, false, key, header[nextpos]);	
-		}else if(checkLatitude(data, key) && checkLatitude(data, header[prevpos])){
+		}else if(checkLongitude(data, key) && checkLatitude(data, header[prevpos])){
 			td = td.prev();
 			tdId = td.attr("id");
 			drawMap(data, [], header, td, tdId, text, false, header[prevpos], key);	
@@ -296,7 +296,7 @@ function drawWordCloud(data, key, id, auto){
 	else
  		div = d3.select("#row").append("td").attr("class", "1rowaa").attr("id", id);
 
-	d3.select("#"+id).append("h6").html("Most common values");
+	d3.select("#"+id).append("h6").html("Most common values in column "+key);
 	wordcloud(topk, id);
 
 }
@@ -472,7 +472,7 @@ function isEven(n) {
 ////////////////////////////* Map visualization *////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function drawMap(data, columnTypes, header, td, id, text, auto, latKey, longKey){
+function drawMap(data, columnTypes, header, td, id, auto, latKey, longKey){
 	var sample = getRandomSample(data, 200);
 	if(latKey == ""){
 		latKey = getKeyName("latitude", columnTypes, header);
@@ -492,6 +492,8 @@ function drawMap(data, columnTypes, header, td, id, text, auto, latKey, longKey)
 	else
 		td.empty();
 		td.next().empty();
+
+	var text = $("<h6>").html("Map for columns "+latKey+" and "+longKey);
 
 	td.append(text);
 	td.append(mapCanvas);
@@ -574,16 +576,18 @@ function ConvertDMSToDD(degrees, minutes, seconds, direction) {
 //////////////////////////* Calendar visualization */////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function drawCalendar(data, dateKey, td, id, text, auto){
+/* Nota, dateArray no es usado (por el momento) */
+function drawCalendar(data, dateKey, td, id, text, auto, multi){
 	//Create Variables
-	var dateFormat = getDateFormat(data, dateKey);
+	var dateFormat = ["day", "month", "year"];
 	var googleData = new google.visualization.DataTable();
+	var dateArray = extractDateArray(data, dateKey);
 	var dateOcurrences = [];
 	var canvasId = "canvas"+id;
 	var calendarCanvas = $("<div>", {id: canvasId, style: "width: 300px; height: 200px; position: absolute; background-color: transparent;"});
 
 	//Check if data is parseable as date
-	if(dateFormat == "Error"){
+	if(dateFormat == "Error" && dateArray == false){
 		alert("Date couldn't be parsed");
 		return;
 	}
@@ -631,6 +635,21 @@ function createDate(dateFormat, date){
 	dateArray = date.split(/[-\/.]/);
 	var date = new Date(dateArray[dateFormat.indexOf("year")],dateArray[dateFormat.indexOf("month")],dateArray[dateFormat.indexOf("day")]);
 	return date;
+}
+
+function extractDateArray(data, key){
+	var i = 0;
+	var dateArray = [];
+	for(var j in data){
+		var dateString = data[j][key];
+		dateArray[i] = new Date(dateString);
+		if(dateArray[i] == "Invalid Date"){
+			dateArray = false;
+			break;
+		}
+		i++
+	}
+	return dateArray;
 }
 
 function countDateOcurrences(date, data, key){

@@ -19,6 +19,27 @@ function checkLatitude(data, key, position){
 	return isLat;
 }
 
+function checkLongitude(data, key, position){
+	var sample = getRandomSample(data, 200);
+	var isLon = false;
+	var llRegex = RegExp("^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\.{1}\d{1,6}");
+	for(var i=0; i<sample.length; i++){
+		rowValue = sample[i][key];
+		if(rowValue == undefined || rowValue == ""){
+			continue;		
+		}
+		else if(llRegex.test(rowValue) || llRegex.test(ParseDMS(rowValue.replace("&deg","°")))){
+			isLon = true;
+			break;
+		}
+		else{
+			break;		
+		}
+	}
+	return isLat;
+}
+
+
 function checkDay(data, key){
 	var sample = getRandomSample(data,200);
 	var isDay = true;
@@ -76,7 +97,8 @@ function checkYear(data, key){
 }
 
 /* Esta, a diferencia de las otras 3, es para fechas como un todo (ie. dd/mm/yyyy) */
-/* El código es el mismo usado para getDateFormat. Mas adelante lo cambiaré por algo mas "refinado" */
+/* El código es el mismo usado para getDateFormat (ubicado en visualizations.js).  */
+/* Mas adelante lo cambiaré por algo mas "refinado"                     	   */
 
 function checkDate(data, key){
 	var ddmmyyyy = 0;
