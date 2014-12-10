@@ -579,7 +579,7 @@ function ConvertDMSToDD(degrees, minutes, seconds, direction) {
 /* Nota, dateArray no es usado (por el momento) */
 function drawCalendar(data, dateKey, td, id, text, auto, multi){
 	//Create Variables
-	var dateFormat = ["day", "month", "year"];
+	var dateFormat = getDateFormat(data, dateKey);
 	var googleData = new google.visualization.DataTable();
 	var dateArray = extractDateArray(data, dateKey);
 	var dateOcurrences = [];
