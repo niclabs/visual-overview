@@ -79,7 +79,7 @@
 			</div>
 	
 			<!-- div para visualizar en grande alguna de las columnas (por implementar) -->
-			<div id="big-visualization"></div>
+			<div id="checkedvisualization"></div>
 		</div>
 
 	</div> <!-- /container -->
@@ -123,7 +123,7 @@
 	button.style.fontSize='12px';
 	button.appendChild( document.createTextNode('Visualize!') );
 	button.onclick = (function(){
-		var url = 'http://viz.niclabs.cl:5000/#'+document.getElementById('input90751').value;
+		var url = 'http://viz.niclabs.cl:5000/#'+encodeURIComponent(document.getElementById('input90751').value);
 		window.open(url);		
 	});
 	theDiv.appendChild(button);

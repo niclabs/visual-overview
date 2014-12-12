@@ -60,6 +60,7 @@ function visualize(data, header, columnTypes){
 	d3.select('#tbody').append("tr").attr("id", "select");
 	d3.select("#tbody").append("tr").attr("id", "row");
 	d3.select("#tbody").append("tr").attr("id", "hist");
+	d3.select("#tbody").append("tr").attr("id", "check");
 
 	//Add visualization
 	for(var j in header){

@@ -12,6 +12,7 @@ function drawVisualization(data, header, columnTypes, position){
 		addSelect(header,position, columnTypes[position], data, id);
 		drawMap(data, columnTypes, header, td, id, true, "", "");
 		drawHistogram(data, header[position], position);
+		addCheckBox(header,position);
 		
 	}else if(columnTypes[position] == "longitude"){
 
@@ -20,6 +21,7 @@ function drawVisualization(data, header, columnTypes, position){
 
 		addSelect(header,position, columnTypes[position], data, id);
 		drawHistogram(data, header[position], position);
+		addCheckBox(header,position);
 
 	}else if(columnTypes[position] == "date"){
 
@@ -29,6 +31,7 @@ function drawVisualization(data, header, columnTypes, position){
 		addSelect(header,position, columnTypes[position], data, id);
 		drawCalendar(data, header[position], td, id, text, true, false);
 		drawHistogram(data, header[position], position);
+		addCheckBox(header,position);
 
 	}else if(columnTypes[position] == "default"){
 
@@ -47,9 +50,11 @@ function drawVisualization(data, header, columnTypes, position){
 			drawWordCloud(data, header[position], id, true);
 		}
 		drawHistogram(data, header[position], position);
+		addCheckBox(header,position);
 	}
 	else{
 		drawHistogram(data, header[position], position);
+		addCheckBox(header,position);
 	}
 }
 
@@ -122,6 +127,25 @@ function addSelect(header, position, columnType, data, tdId){
 	
 
 }
+
+function addCheckBox(header, position){
+	var newCheckBox = document.createElement("INPUT");
+	newCheckBox.setAttribute("type", "checkbox");
+	var id = "check" + position;
+	var key = header[position];
+	$(newCheckBox).attr("class", key);
+	$(newCheckBox).attr("id", id);
+	
+	var id = "check"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
+
+	var td = $("<td>").attr("class","1rowaa").attr("id", id);
+	$("#check").append(td);
+	var text = $("<h6>").html("Select column "+header[position]);
+	td.append(text);
+	td.append(newCheckBox);
+
+}
+
 function updateURI(newType, position){
 	var key = "select"+position;
 	var hash = location.href.split("#")[1].split("&");
