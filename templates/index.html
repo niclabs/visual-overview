@@ -10,7 +10,7 @@
 			url = decodeURIComponent(hash[0]);
 			initialize_visualization(url);
 			document.getElementById('url').value=url;
-			$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
+			$("#visualization").on("loaded", function(){$("#loadingDiv").hide(); $("#visOps").show();});
 			$("#visualization").on("loaded", function(){
 				for(var i=1; i<hash.length; i++){
 					var change = hash[i].split("=");
@@ -78,6 +78,20 @@
 				</table>
 			</div>
 	
+			<br>
+			<div id="visOps" style="width:1170px; text-align:center; display:none;" >
+				<h3>Want a different Visualization?</h3>
+				<p>First, select one or more columns on the upper table.</p>
+				<p>Now select a visualization:
+				<select>
+					<option value="Invalid" disabled selected>Select a Visualization!</option>
+					<option value="Time Series">Time Series</option>
+				</select>
+				</p>
+				<button type="submit" id="personalVis" class="btn btn-primary">
+					Visualize Selected Columns!
+				</button>			
+			</div>
 			<!-- div para visualizar en grande alguna de las columnas (por implementar) -->
 			<div id="checkedvisualization"></div>
 		</div>
@@ -159,7 +173,7 @@
 		var url = d3.select("#url").node().value;
 		window.location.hash=encodeURIComponent(url);
 		initialize_visualization(url);
-		$("#visualization").on("loaded", function(){$("#loadingDiv").hide();});
+		$("#visualization").on("loaded", function(){$("#loadingDiv").hide(); $("#visOps").show();});
 	});
 
 

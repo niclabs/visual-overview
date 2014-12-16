@@ -89,7 +89,7 @@ function isNumber(n) {
 
 function addSelect(header, position, columnType, data, tdId){
 	var key = header[position];
-	var options = ['BoxPlot', 'WordCloud', 'Map', 'Time Serie'];
+	var options = ['BoxPlot', 'WordCloud', 'Map', 'Time Series'];
 	var newSelect = document.createElement('select');
 	var id = "select" + position;
 	$(newSelect).attr("class", key);
@@ -185,7 +185,7 @@ function translate(columnType){
 			t = "Map";
 			break;
 		case "date":
-			t = "Time Serie";
+			t = "Time Series";
 			break;
 	}
 	return t;
@@ -211,7 +211,7 @@ function reDraw(data, header, position, tdId, newType){
 			alert("Cannot Parse as Number");
 		}
 	}
-	else if(newType == "Time Serie"){
+	else if(newType == "Time Series"){
 		var td = $("#"+tdId);
 		var text = $("<h6>").html("Date occurrences");
 		drawCalendar(data, key, td, tdId, text, false, false);		
