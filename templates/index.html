@@ -52,50 +52,88 @@
 		<div class="page-header">
 			<h1>Visual Overview</h1>
 		</div>
-
-		<div class="form-group">
-			<label for="">Dataset URL (a <code>.csv</code> file)</label>
-				<input type="text" id="url" class="form-control" id="" placeholder="Give me the URL of a dataset">
+		<div class="row" style="margin-bottom: 50px;">
+			<form class="form" role="form">
+				<div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+						<input type="text" id="url" class="form-control" id="" placeholder="Give me the URL of a dataset">
+				</div>
+				<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+					<button type="submit" id="go" class="btn btn-primary">Visualize!</button>
+				</div>
+			</form>				
 		</div>
-
-		<button type="submit" id="go" class="btn btn-primary">Visualize!</button>
-	
-		<div id="loadingDiv" style="display: none; text-align: center; padding-top: 100px;">
-			<img src="{{url_for("static", filename="484.GIF")}}">	
-		</div>
-
-		<div id="visualization" style="position:relative">
-
-			<!-- Aquí se dibuja la tabla -->
-			<div id ="table-container" style="overflow: auto; position: relative; height: 100%; width: 1170px;">
-				<table class="table table-hover" style="table-layout: fixed;">
-					<thead>
-						<tr id="headerrow">
-						</tr>
-					</thead>
-					<tbody id="tbody">
-					</tbody>
-				</table>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div id="loadingDiv" style="display: none; text-align: center; padding-top: 100px;">
+					<img src="{{url_for("static", filename="484.GIF")}}">	
+				</div>
+				<div id="visualization" style="position:relative">
+					<!-- Aquí se dibuja la tabla -->
+					<div id ="table-container" style="overflow: auto; position: relative; height: 100%; width: 1170px;">
+						<table class="table table-hover" style="table-layout: fixed;">
+							<thead>
+								<tr id="headerrow">
+								</tr>
+							</thead>
+							<tbody id="tbody">
+							</tbody>
+						</table>
+					</div>
+			
+					<br>
+					<div id="visOps" style="width:1170px; text-align:center; display:none;" >
+						<h3>Want a different Visualization?</h3>
+						<p>First, select one or more columns on the upper table.</p>
+						<p>Now select a visualization:
+						<select id="visSelect">
+							<option value="Invalid" disabled selected>Select a Visualization!</option>
+							<option value="Time Series">Time Series</option>
+						</select>
+						</p>
+						<button type="submit" id="personalVis" class="btn btn-primary">
+							Visualize Selected Columns!
+						</button>			
+					</div>
+					<br>
+					<!-- div para visualizar en grande alguna de las columnas (por implementar) -->
+					<div id="checkedvisualization" style="width:700px; heigth:400px; background-color:transparent;"></		div>
+				</div>				
 			</div>
-	
-			<br>
-			<div id="visOps" style="width:1170px; text-align:center; display:none;" >
-				<h3>Want a different Visualization?</h3>
-				<p>First, select one or more columns on the upper table.</p>
-				<p>Now select a visualization:
-				<select id="visSelect">
-					<option value="Invalid" disabled selected>Select a Visualization!</option>
-					<option value="Time Series">Time Series</option>
-				</select>
-				</p>
-				<button type="submit" id="personalVis" class="btn btn-primary">
-					Visualize Selected Columns!
-				</button>			
-			</div>
-			<br>
-			<!-- div para visualizar en grande alguna de las columnas (por implementar) -->
-			<div id="checkedvisualization" style="width:700px; heigth:400px; background-color:transparent;"></div>
 		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	</div> <!-- /container -->
 	<br>
