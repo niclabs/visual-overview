@@ -83,7 +83,7 @@
 				<h3>Want a different Visualization?</h3>
 				<p>First, select one or more columns on the upper table.</p>
 				<p>Now select a visualization:
-				<select>
+				<select id="visSelect">
 					<option value="Invalid" disabled selected>Select a Visualization!</option>
 					<option value="Time Series">Time Series</option>
 				</select>
@@ -92,8 +92,9 @@
 					Visualize Selected Columns!
 				</button>			
 			</div>
+			<br>
 			<!-- div para visualizar en grande alguna de las columnas (por implementar) -->
-			<div id="checkedvisualization"></div>
+			<div id="checkedvisualization" style="width:700px; heigth:400px; background-color:transparent;"></div>
 		</div>
 
 	</div> <!-- /container -->
@@ -155,6 +156,7 @@
     <script src="{{url_for("static", filename="js/wordcloud.js")}}"></script>
     <script src="{{url_for("static", filename="js/bar.js")}}"></script>
     <script src="{{url_for("static", filename="js/visualizations.js")}}"></script>
+    <script src="{{url_for("static", filename="js/mcvisualizations.js")}}"></script>
     <script src="{{url_for("static", filename="js/csv_utils.js")}}"></script>
     <script src="{{url_for("static", filename="js/dataDict.js")}}"></script>
     <script src="{{url_for("static", filename="js/data.js")}}"></script>
@@ -175,7 +177,6 @@
 		initialize_visualization(url);
 		$("#visualization").on("loaded", function(){$("#loadingDiv").hide(); $("#visOps").show();});
 	});
-
 
     	
     </script>

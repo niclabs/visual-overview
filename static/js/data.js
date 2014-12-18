@@ -63,14 +63,14 @@ function checkMonth(data, key){
 	var emonths = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 	for(var i=0; i<sample.length; i++){
 		rowValue = sample[i][key];
-		if(rowValue == undefined || rowVale == ""){
+		if(rowValue == undefined || rowValue == ""){
 			continue;		
 		}
-		if(smonths.indexOf(rowValue.toLowerCase()) || emonths.indexOf(rowValue.toLowerCase())){
+		if(smonths.indexOf(rowValue.toLowerCase()) != -1 || emonths.indexOf(rowValue.toLowerCase()) != -1){
 			isMonth = true;
 			break;		
 		}
-		else if(parseInt(rowValue > 12) || parseInt(rowValue < 1)){
+		else if(parseInt(rowValue) > 12 || parseInt(rowValue) < 1){
 			isMonth = false;
 			break;
 		}

@@ -23,6 +23,16 @@ function initialize_visualization(url){
 				data = d3.csv.parse(data);
 				columnTypes = determineColumnTypes(header);
 				visualize(data, header, columnTypes);
+				$("#personalVis").on("click", function(){
+					var visualization = $("#visSelect option:selected").text();
+					var checkedKeys = [];
+					for(var i in header){
+						if($("#check"+i).is(":checked")){
+							checkedKeys.push(header[i]);						
+						}					
+					}
+					mc_visualize(checkedKeys, visualization, data);
+				})
 			}catch(err){
 				alert("An error ocurred while processing the dataset");
 				console.log(err);

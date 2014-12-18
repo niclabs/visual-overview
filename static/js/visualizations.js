@@ -133,7 +133,7 @@ function addCheckBox(header, position){
 	newCheckBox.setAttribute("type", "checkbox");
 	var id = "check" + position;
 	var key = header[position];
-	$(newCheckBox).attr("class", key);
+	$(newCheckBox).attr("value", key);
 	$(newCheckBox).attr("id", id);
 	
 	var id = "check"+key.toLowerCase().replace(/[^0-9a-z-]/g,"")+position;
